@@ -3,10 +3,63 @@
 import { useState } from 'react'
 import { getStripe } from '@/lib/stripe'
 
+interface FormData {
+  currentProfile: string
+  age: string
+  gender: string
+  interests: string
+  targetAudience: string
+  profession: string
+  email: string
+  platform: string
+  specialRequests: string
+}
+
 export default function Dating() {
   const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState<FormData>({
+    currentProfile: '',
+    age: '',
+    gender: '',
+    interests: '',
+    targetAudience: '',
+    profession: '',
+    email: '',
+    platform: '',
+    specialRequests: ''
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const validateForm = () => {
+    if (!formData.currentProfile.trim()) {
+      alert('Bitte geben Sie Ihr aktuelles Profil ein.')
+      return false
+    }
+    if (!formData.age.trim()) {
+      alert('Bitte geben Sie Ihr Alter ein.')
+      return false
+    }
+    if (!formData.email.trim()) {
+      alert('Bitte geben Sie eine E-Mail-Adresse ein.')
+      return false
+    }
+    if (!formData.platform) {
+      alert('Bitte wählen Sie eine Dating-App aus.')
+      return false
+    }
+    return true
+  }
 
   const handlePayment = async () => {
+    if (!validateForm()) return
+
     setLoading(true)
     
     try {
@@ -15,7 +68,10 @@ export default function Dating() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ service: 'dating' }),
+        body: JSON.stringify({ 
+          service: 'dating',
+          formData: formData 
+        }),
       })
 
       const { sessionId } = await response.json()
@@ -26,6 +82,7 @@ export default function Dating() {
       }
     } catch (error) {
       console.error('Payment error:', error)
+      alert('Fehler beim Weiterleiten zur Zahlung. Bitte versuchen Sie es erneut.')
     } finally {
       setLoading(false)
     }
@@ -69,9 +126,13 @@ export default function Dating() {
                     Ihr aktueller Profiltext
                   </label>
                   <textarea
+                    name="currentProfile"
                     className="form-textarea"
                     rows={5}
                     placeholder="Beschreiben Sie sich kurz oder fügen Sie Ihren aktuellen Profiltext ein..."
+                    value={formData.currentProfile}
+                    onChange={handleInputChange}
+                    required
                   />
                   <span className="form-help">Auch Stichpunkte zu Ihrer Persönlichkeit reichen aus</span>
                 </div>
@@ -82,10 +143,14 @@ export default function Dating() {
                   </label>
                   <input
                     type="number"
+                    name="age"
                     className="form-input"
                     placeholder="25"
                     min="18"
                     max="99"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
@@ -93,10 +158,17 @@ export default function Dating() {
                   <label className="form-label">
                     Geschlecht
                   </label>
-                  <select className="form-select">
-                    <option>Männlich</option>
-                    <option>Weiblich</option>
-                    <option>Divers</option>
+                  <select 
+                    name="gender"
+                    className="form-select"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Bitte wählen...</option>
+                    <option value="Männlich">Männlich</option>
+                    <option value="Weiblich">Weiblich</option>
+                    <option value="Divers">Divers</option>
                   </select>
                 </div>
 
@@ -106,8 +178,12 @@ export default function Dating() {
                   </label>
                   <input
                     type="text"
+                    name="interests"
                     className="form-input"
                     placeholder="z.B. Reisen, Sport, Kochen, Musik, Fotografie..."
+                    value={formData.interests}
+                    onChange={handleInputChange}
+                    required
                   />
                   <span className="form-help">Nennen Sie 3-5 Ihrer Hauptinteressen</span>
                 </div>
@@ -116,11 +192,18 @@ export default function Dating() {
                   <label className="form-label">
                     Was suchen Sie?
                   </label>
-                  <select className="form-select">
-                    <option>Feste Beziehung</option>
-                    <option>Lockeres Dating</option>
-                    <option>Neue Freunde</option>
-                    <option>Bin offen für alles</option>
+                  <select 
+                    name="targetAudience"
+                    className="form-select"
+                    value={formData.targetAudience}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Bitte wählen...</option>
+                    <option value="Feste Beziehung">Feste Beziehung</option>
+                    <option value="Lockeres Dating">Lockeres Dating</option>
+                    <option value="Neue Freunde">Neue Freunde</option>
+                    <option value="Bin offen für alles">Bin offen für alles</option>
                   </select>
                 </div>
 
@@ -130,8 +213,11 @@ export default function Dating() {
                   </label>
                   <input
                     type="text"
+                    name="profession"
                     className="form-input"
                     placeholder="z.B. Marketing Manager, Student der BWL..."
+                    value={formData.profession}
+                    onChange={handleInputChange}
                   />
                 </div>
 
@@ -141,8 +227,11 @@ export default function Dating() {
                   </label>
                   <input
                     type="email"
+                    name="email"
                     className="form-input"
                     placeholder="ihre@email.de"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required
                   />
                   <span className="form-help">Wir senden Ihr optimiertes Profil an diese Adresse</span>
@@ -152,15 +241,22 @@ export default function Dating() {
                   <label className="form-label">
                     Gewünschte Dating-App
                   </label>
-                  <select className="form-select">
-                    <option>Tinder</option>
-                    <option>Bumble</option>
-                    <option>Hinge</option>
-                    <option>Lovoo</option>
-                    <option>Badoo</option>
-                    <option>Parship</option>
-                    <option>ElitePartner</option>
-                    <option>Andere/Mehrere</option>
+                  <select 
+                    name="platform"
+                    className="form-select"
+                    value={formData.platform}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Bitte wählen...</option>
+                    <option value="Tinder">Tinder</option>
+                    <option value="Bumble">Bumble</option>
+                    <option value="Hinge">Hinge</option>
+                    <option value="Lovoo">Lovoo</option>
+                    <option value="Badoo">Badoo</option>
+                    <option value="Parship">Parship</option>
+                    <option value="ElitePartner">ElitePartner</option>
+                    <option value="Andere/Mehrere">Andere/Mehrere</option>
                   </select>
                 </div>
 
@@ -169,9 +265,12 @@ export default function Dating() {
                     Besondere Wünsche (optional)
                   </label>
                   <textarea
+                    name="specialRequests"
                     className="form-textarea"
                     rows={3}
                     placeholder="Spezielle Tonalität, zu betonende Eigenschaften, etc..."
+                    value={formData.specialRequests}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
