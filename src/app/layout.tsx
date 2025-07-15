@@ -5,8 +5,8 @@ import '../styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'KI Text Studio',
-  description: 'Professionelle KI-optimierte Texte für Bewerbung, Dating und Social Media',
+  title: 'KI Text Studio - Professionelle KI-optimierte Texte',
+  description: 'Perfekte Bewerbungen, unwiderstehliche Dating-Profile und überzeugende Social Media Bios. KI-optimiert für Ihren Erfolg.',
 }
 
 export default function RootLayout({
@@ -17,20 +17,20 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={inter.className}>
-        <header className="bg-white shadow-sm border-b">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-gray-900">
-                KI Text Studio
-              </h1>
-              <nav className="hidden md:flex space-x-8">
-                <a href="/bewerbung" className="text-gray-600 hover:text-gray-900">
+        <header className="header">
+          <div className="container">
+            <div className="header-content">
+              <a href="/" className="logo">
+                <h1>KI Text Studio</h1>
+              </a>
+              <nav className="nav">
+                <a href="/bewerbung" className="nav-link">
                   Bewerbung
                 </a>
-                <a href="/dating" className="text-gray-600 hover:text-gray-900">
+                <a href="/dating" className="nav-link">
                   Dating
                 </a>
-                <a href="/bio" className="text-gray-600 hover:text-gray-900">
+                <a href="/bio" className="nav-link">
                   Bio
                 </a>
               </nav>
@@ -40,9 +40,33 @@ export default function RootLayout({
 
         {children}
 
-        <footer className="bg-gray-900 text-white py-8">
-          <div className="container mx-auto px-4 text-center">
-            <p>&copy; 2024 KI Text Studio. Alle Rechte vorbehalten.</p>
+        <footer className="footer">
+          <div className="container">
+            <div className="footer-content">
+              <div className="footer-section">
+                <h3>KI Text Studio</h3>
+                <p>Professionelle KI-optimierte Texte für Ihren Erfolg</p>
+              </div>
+              <div className="footer-section">
+                <h4>Services</h4>
+                <ul>
+                  <li><a href="/bewerbung">Bewerbung optimieren</a></li>
+                  <li><a href="/dating">Dating-Profil</a></li>
+                  <li><a href="/bio">Social Media Bio</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>Support</h4>
+                <ul>
+                  <li><a href="/kontakt">Kontakt</a></li>
+                  <li><a href="/impressum">Impressum</a></li>
+                  <li><a href="/datenschutz">Datenschutz</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>&copy; 2024 KI Text Studio. Alle Rechte vorbehalten.</p>
+            </div>
           </div>
         </footer>
       </body>
