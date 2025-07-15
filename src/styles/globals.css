@@ -918,6 +918,34 @@ img {
   letter-spacing: 0.5px;
 }
 
+/* Clickable Service Cards */
+.service-card-clickable {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+  position: relative;
+}
+
+.service-card-clickable:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-card-clickable .service-cta {
+  color: var(--accent-gold);
+  font-weight: 600;
+  transition: var(--transition-base);
+}
+
+.service-card-clickable:hover .service-cta {
+  color: var(--primary-navy);
+}
+
 /* Features Section */
 .features-section {
   background: var(--bg-light);
@@ -1195,13 +1223,58 @@ img {
     margin: 0 var(--spacing-md);
   }
 
+  /* Form Mobile Fixes */
+  .service-form {
+    padding: var(--spacing-lg);
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select,
+  .form-file {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+  }
+
+  .form-help {
+    font-size: 0.8rem;
   }
 
   .btn-payment {
-    min-width: 250px;
+    width: 100%;
+    min-width: auto;
     padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+  }
+
+  .payment-secure {
+    font-size: 0.75rem;
+  }
+
+  .service-summary {
+    padding: var(--spacing-lg);
+  }
+
+  .summary-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .summary-list li {
+    font-size: 0.95rem;
+  }
+
+  .price-value {
+    font-size: 1.5rem;
   }
 }
 
@@ -1517,6 +1590,22 @@ img {
   .ats-problem-cta {
     flex-direction: column;
     align-items: center;
+  }
+
+  .ats-problem-card {
+    padding: var(--spacing-lg);
+  }
+
+  .ats-problem-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .ats-problem-card p {
+    font-size: 1rem;
+  }
+
+  .problem-icon {
+    font-size: 2.5rem;
   }
 }
 
