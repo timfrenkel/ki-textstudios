@@ -80,7 +80,9 @@ img {
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--light-gray);
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, height;
+  transform: translateZ(0);
 }
 
 .header-scrolled {
@@ -90,18 +92,20 @@ img {
 
 .header-badge,
 .nav {
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .header-badge-hidden {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-10px) translateZ(0);
   pointer-events: none;
 }
 
 .nav-hidden {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-10px) translateZ(0);
   pointer-events: none;
 }
 
@@ -186,6 +190,42 @@ img {
 
 .nav-link-disabled::after {
   display: none;
+}
+
+/* Desktop Header Compact Styles */
+.header-compact {
+  min-height: 60px;
+  height: 60px;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  will-change: transform, height;
+  transform: translateZ(0);
+}
+
+.header-compact .header-content {
+  padding: 0.5rem 0;
+  gap: var(--spacing-md);
+  min-height: 60px;
+  height: 60px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, height;
+  transform: translateZ(0);
+}
+
+.header-compact .logo h1 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0;
+  transition: font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: font-size;
+  transform: translateZ(0);
+}
+
+.header-compact .logo-byline {
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
 }
 
 /* Footer Styles */
@@ -1238,21 +1278,27 @@ img {
     height: 44px;
     padding-top: 0;
     padding-bottom: 0;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-md);
+    will-change: transform, height;
+    transform: translateZ(0);
   }
   .header-compact .header-content {
     padding: 0.2rem 0;
     gap: 0;
     min-height: 44px;
     height: 44px;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, height;
+    transform: translateZ(0);
   }
   .header-compact .logo h1 {
     font-size: 1.2rem;
     line-height: 1.2;
     margin: 0;
-    transition: font-size 0.3s cubic-bezier(0.4,0,0.2,1);
+    transition: font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: font-size;
+    transform: translateZ(0);
   }
   .header-compact .logo-byline {
     font-size: 0.7rem;

@@ -1,42 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const ticking = useRef(false);
+  const scrollThreshold = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (isMobile) {
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          setIsScrolled(true);
-        } else if (currentScrollY < lastScrollY) {
-          setIsScrolled(false);
-        }
-      } else {
-        setIsScrolled(false);
+      if (!ticking.current) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Only update if we've scrolled significantly (50px threshold)
+          if (Math.abs(currentScrollY - scrollThreshold.current) > 50) {
+            if (currentScrollY > scrollThreshold.current && currentScrollY > 150) {
+              // Scrolling down significantly - hide header elements
+              setIsScrolled(true);
+            } else if (currentScrollY < scrollThreshold.current - 50) {
+              // Scrolling up significantly - show header elements
+              setIsScrolled(false);
+            }
+            scrollThreshold.current = currentScrollY;
+          }
+          
+          setLastScrollY(currentScrollY);
+          ticking.current = false;
+        });
+        ticking.current = true;
       }
-      setLastScrollY(currentScrollY);
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, isMobile]);
+  }, []);
 
   return (
-    <header className={`header${isScrolled && isMobile ? ' header-compact' : ''} ${isScrolled ? 'header-scrolled' : ''}`}>
+    <header className={`header${isScrolled ? ' header-compact' : ''} ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="container">
         <div className="header-content">
           <Link href="/" className="logo">
