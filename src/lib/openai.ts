@@ -10,21 +10,45 @@ export const generateOptimizedText = async (
   })
   const prompts = {
     bewerbung: `
-Als Experte für professionelle Bewerbungen, optimiere das folgende Anschreiben:
+Du bist ein professioneller Bewerbungsschreiber und Karrierecoach mit über 10 Jahren Erfahrung im Recruiting.  
+Dein Ziel ist es, ein hoch personalisiertes, strategisch starkes Bewerbungsschreiben zu erstellen, das sowohl menschlich berührt als auch fachlich überzeugt.  
+Dabei sprichst du die Sprache der jeweiligen Branche, verwendest Keywords aus der Stellenausschreibung und passt dich dem gewünschten Tonfall an.
 
-Stellenausschreibung: ${userData.jobDescription}
-Aktuelles Anschreiben: ${userData.currentLetter}
-Branche: ${userData.industry}
-Gewünschte Wirkung: ${userData.style}
-Besondere Wünsche: ${userData.specialRequests || 'Keine'}
+Hier sind die Informationen vom Bewerber:
 
-Erstelle ein professionelles, ATS-optimiertes Anschreiben, das:
-- Perfekt zur Stellenausschreibung passt
-- Die gewünschte Wirkung erzielt
-- Alle relevanten Keywords enthält
-- Überzeugend und authentisch wirkt
+---
+🧾 Stellenausschreibung:  
+${userData.jobDescription}
 
-Antworte nur mit dem optimierten Anschreiben:`,
+👤 Beruflicher Hintergrund & Qualifikationen:  
+${userData.currentLetter}
+
+💡 Besondere Hinweise (optional):  
+${userData.specialRequests || 'Keine besonderen Hinweise'}
+
+🗣️ Gewünschter Tonfall:  
+${userData.style}  
+(Beispiele: freundlich-professionell, selbstbewusst, locker-kreativ, sachlich-offiziell)
+
+📂 Zielbranche oder Berufsbereich (falls angegeben):  
+${userData.industry}
+
+---
+
+Deine Aufgabe:
+1. Analysiere die Stellenausschreibung und extrahiere verdeckt die Schlüsselanforderungen & Prioritäten der Firma (Hard Skills, Soft Skills, Kultur).
+2. Verknüpfe die Angaben des Bewerbers gezielt mit den Anforderungen.
+3. Verfasse ein professionelles Bewerbungsschreiben mit:
+   - Individueller Einleitung mit Bezug zur Stelle/Firma
+   - Hauptteil mit passenden Erfahrungen und Erfolgen
+   - Klarem Argument, warum diese Person Mehrwert bringt
+   - Passendem Call-to-Action
+4. Vermeide Floskeln und Standardphrasen. Schreibe konkret, aktiv und lebendig.
+5. Verwende relevante Begriffe aus der Stellenausschreibung (für ATS-Systeme).
+
+Stil: Natürlich, professionell, klar. Nicht übertrieben, aber positiv und selbstbewusst.
+
+Antworte nur mit dem fertigen Bewerbungsschreiben – keine Erklärungen.`,
 
     dating: `
 Als Dating-Experte, optimiere das folgende Dating-Profil:

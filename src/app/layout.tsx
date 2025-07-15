@@ -23,6 +23,11 @@ export default function RootLayout({
               <a href="/" className="logo">
                 <h1>KI Text Studio <span className="logo-byline">by loopnex</span></h1>
               </a>
+              <div className="header-badge">
+                <div className="launch-badge">
+                  🚀 Launch-Angebot • 50% Rabatt • Experten-KI
+                </div>
+              </div>
               <nav className="nav">
                 <a href="/bewerbung" className="nav-link">
                   Bewerbung

@@ -11,26 +11,31 @@ export default function Home() {
       subtitle: 'GPT-4 Prompt-Engineering',
       description: 'Advanced AI-optimierte Anschreiben mit modernsten Language Models für maximale ATS-Kompatibilität',
       price: '29€',
+      originalPrice: '58€',
+      discount: 50,
       image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&h=400&fit=crop',
-      color: 'blue'
+      color: 'blue',
+      available: true
     },
     {
       id: 'dating',
       title: 'Dating-Profil', 
-      subtitle: 'Neural Network Optimierung',
+      subtitle: 'Bald verfügbar',
       description: 'Psychologisch-fundierte AI-Texte mit Deep Learning Algorithmen für maximale Match-Rate',
       price: '19€',
       image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=400&fit=crop',
-      color: 'pink'
+      color: 'pink',
+      available: false
     },
     {
       id: 'bio',
       title: 'Social Media Bio',
-      subtitle: 'NLP-Power Texte',
+      subtitle: 'Bald verfügbar',
       description: 'State-of-the-art Natural Language Processing für viral-optimierte Personal Branding',
       price: '15€',
       image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop',
-      color: 'green'
+      color: 'green',
+      available: false
     }
   ]
 
@@ -103,25 +108,62 @@ export default function Home() {
           <div className="hero-overlay">
             <div className="hero-content">
               <div className="hero-text">
-                <div className="tech-badge hero-stagger hero-stagger-1">
-                  🚀 Latest: GPT-4 Turbo Integration • Claude 3.5 Sonnet • Kontinuierliche Model-Updates
-                </div>
-                <h1 className="hero-title hero-stagger hero-stagger-2">KI Text Studio</h1>
-                <h2 className="hero-subtitle hero-stagger hero-stagger-3">Advanced AI. Prompt-Engineering Excellence.</h2>
-                <p className="hero-description hero-stagger hero-stagger-4">
-                  Modernste Large Language Models treffen auf 1000+ Stunden Prompt-Engineering. 
-                  GPT-4, Claude & Neural Networks generieren Texte, die Ihre Konkurrenz übertreffen.
-                  State-of-the-art Technology für messbare Erfolge.
+                <h1 className="hero-title hero-stagger hero-stagger-1">
+                  Dein Traumjob wartet
+                </h1>
+                <h2 className="hero-subtitle hero-stagger hero-stagger-2">
+                  Ein Job ist der Großteil deines Lebens. Warum Risiko eingehen beim Traumjob?
+                </h2>
+                <p className="hero-description hero-stagger hero-stagger-3">
+                  Mit unserer Experten-KI gehst du auf Nummer sicher. Deine Konkurrenz nutzt ChatGPT - du bekommst 1000+ Stunden Prompt-Engineering.
                 </p>
                 <div className="hero-buttons hero-stagger hero-stagger-4">
                   <Link href="#services" className="btn-hero-primary">
-                    Services Entdecken
-                  </Link>
-                  <Link href="#wie-es-funktioniert" className="btn-hero-secondary">
-                    Wie es funktioniert
+                    Jetzt Traumjob sichern - 50% Rabatt
                   </Link>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ATS Problem Section */}
+      <section className="ats-problem-section">
+        <div className="container">
+          <div className="ats-problem-content">
+            <div className="ats-problem-header">
+              <h2>Warum bekommst du keine Antworten auf deine Bewerbungen?</h2>
+              <p>Die harte Realität: 75% der Bewerbungen werden von Robotern aussortiert</p>
+            </div>
+            
+            <div className="ats-problem-grid">
+              <div className="ats-problem-card">
+                <div className="problem-icon">🤖</div>
+                <h3>ATS-Systeme entscheiden</h3>
+                <p>Bevor ein Mensch deine Bewerbung sieht, scannt ein Roboter nach Keywords. Fehlen die richtigen Begriffe, wird sie sofort aussortiert.</p>
+              </div>
+              
+              <div className="ats-problem-card">
+                <div className="problem-icon">❌</div>
+                <h3>75% werden aussortiert</h3>
+                <p>Nur 25% der Bewerbungen erreichen einen Menschen. Die anderen landen im digitalen Papierkorb - ohne dass du es merkst.</p>
+              </div>
+              
+              <div className="ats-problem-card">
+                <div className="problem-icon">💡</div>
+                <h3>Deine Konkurrenz nutzt ChatGPT</h3>
+                <p>Die meisten Bewerber verwenden generische ChatGPT-Texte. Du bekommst Experten-KI mit 1000+ Stunden ATS-Expertise.</p>
+              </div>
+            </div>
+            
+            <div className="ats-problem-cta">
+              <a href="/ats-info" className="btn-secondary">
+                Mehr über ATS-Systeme erfahren →
+              </a>
+              <a href="#services" className="btn-primary">
+                Jetzt ATS-optimierte Bewerbung erstellen
+              </a>
             </div>
           </div>
         </div>
@@ -137,15 +179,19 @@ export default function Home() {
           
           <div className="services-grid grid grid-3">
             {services.map((service, index) => (
-              <Link 
+              <div 
                 key={service.id}
-                href={`/${service.id}`} 
-                className={`service-card card card-animate scroll-animate-delay-${index + 1}`}
+                className={`service-card card card-animate scroll-animate-delay-${index + 1} ${!service.available ? 'service-unavailable' : ''}`}
               >
+                {!service.available && (
+                  <div className="service-unavailable-overlay">
+                    <div className="unavailable-badge">Bald verfügbar</div>
+                  </div>
+                )}
                 <img 
                   src={service.image} 
                   alt={service.title} 
-                  className="service-image"
+                  className={`service-image ${!service.available ? 'grayscale' : ''}`}
                 />
                 <div className="service-info">
                   <p className="service-category">KI-Service</p>
@@ -153,11 +199,27 @@ export default function Home() {
                   <p className="service-subtitle">{service.subtitle}</p>
                   <p className="service-description">{service.description}</p>
                   <div className="service-footer">
-                    <span className="service-price">ab {service.price}</span>
-                    <span className="service-cta">Jetzt starten →</span>
+                    <div className="service-price-container">
+                      {service.discount ? (
+                        <>
+                          <span className="service-price-discounted">{service.price}</span>
+                          <span className="service-price-original">{service.originalPrice}</span>
+                          <span className="service-discount-badge">-{service.discount}%</span>
+                        </>
+                      ) : (
+                        <span className="service-price">ab {service.price}</span>
+                      )}
+                    </div>
+                    {service.available ? (
+                      <Link href={`/${service.id}`} className="service-cta">
+                        Jetzt starten →
+                      </Link>
+                    ) : (
+                      <span className="service-cta-disabled">Bald verfügbar</span>
+                    )}
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
