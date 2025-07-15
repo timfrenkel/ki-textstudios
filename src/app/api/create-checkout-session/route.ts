@@ -9,15 +9,15 @@ export async function POST(request: NextRequest) {
   try {
     const { service } = await request.json()
     
-    // Service pricing
-    const pricing: Record<string, { amount: number; name: string }> = {
-      bewerbung: { amount: 2900, name: 'Bewerbung optimieren' },
-      dating: { amount: 1900, name: 'Dating-Profil optimieren' },
-      bio: { amount: 1500, name: 'Social Media Bio optimieren' }
+    // Stripe Price IDs
+    const priceIds: Record<string, string> = {
+      bewerbung: 'price_1Rl6CB1PblTbwG3OfkfSINf0',
+      dating: 'price_1Rl6Ca1PblTbwG3OHE8DTBK4',
+      bio: 'price_1Rl6DF1PblTbwG3OrwEJwYQZ'
     }
 
-    const serviceData = pricing[service]
-    if (!serviceData) {
+    const priceId = priceIds[service]
+    if (!priceId) {
       return NextResponse.json({ error: 'Invalid service' }, { status: 400 })
     }
 
@@ -25,14 +25,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: serviceData.name,
-              description: `KI-optimierte ${service} Erstellung`,
-            },
-            unit_amount: serviceData.amount,
-          },
+          price: priceId,
           quantity: 1,
         },
       ],
