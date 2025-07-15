@@ -1,21 +1,83 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 import { getStripe } from '@/lib/stripe'
+
+interface FormData {
+  jobDescription: string
+  currentLetter: string
+  resume?: File
+  industry: string
+  style: string
+  email: string
+  specialRequests: string
+}
 
 export default function Bewerbung() {
   const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState<FormData>({
+    jobDescription: '',
+    currentLetter: '',
+    industry: '',
+    style: '',
+    email: '',
+    specialRequests: ''
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        resume: file
+      }))
+    }
+  }
+
+  const validateForm = () => {
+    if (!formData.jobDescription.trim()) {
+      alert('Bitte geben Sie eine Stellenausschreibung ein.')
+      return false
+    }
+    if (!formData.currentLetter.trim()) {
+      alert('Bitte geben Sie Ihr aktuelles Anschreiben ein.')
+      return false
+    }
+    if (!formData.email.trim()) {
+      alert('Bitte geben Sie eine E-Mail-Adresse ein.')
+      return false
+    }
+    if (!formData.style) {
+      alert('Bitte wählen Sie eine gewünschte Wirkung aus.')
+      return false
+    }
+    return true
+  }
 
   const handlePayment = async () => {
+    if (!validateForm()) return
+
     setLoading(true)
     
     try {
+      // Formular-Daten zur Session hinzufügen
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ service: 'bewerbung' }),
+        body: JSON.stringify({ 
+          service: 'bewerbung',
+          formData: formData 
+        }),
       })
 
       const { sessionId } = await response.json()
@@ -26,6 +88,7 @@ export default function Bewerbung() {
       }
     } catch (error) {
       console.error('Payment error:', error)
+      alert('Fehler beim Weiterleiten zur Zahlung. Bitte versuchen Sie es erneut.')
     } finally {
       setLoading(false)
     }
@@ -69,9 +132,13 @@ export default function Bewerbung() {
                     Stellenausschreibung
                   </label>
                   <textarea
+                    name="jobDescription"
                     className="form-textarea"
                     rows={4}
                     placeholder="Fügen Sie hier die komplette Stellenausschreibung ein..."
+                    value={formData.jobDescription}
+                    onChange={handleInputChange}
+                    required
                   />
                   <span className="form-help">Kopieren Sie die vollständige Stellenausschreibung für beste Ergebnisse</span>
                 </div>
@@ -81,9 +148,13 @@ export default function Bewerbung() {
                     Ihr aktuelles Anschreiben
                   </label>
                   <textarea
+                    name="currentLetter"
                     className="form-textarea"
                     rows={8}
                     placeholder="Ihr aktuelles Anschreiben oder Stichpunkte zu Ihren Qualifikationen..."
+                    value={formData.currentLetter}
+                    onChange={handleInputChange}
+                    required
                   />
                   <span className="form-help">Auch Stichpunkte oder unvollständige Texte sind ausreichend</span>
                 </div>
@@ -96,6 +167,7 @@ export default function Bewerbung() {
                     type="file"
                     accept=".pdf"
                     className="form-file"
+                    onChange={handleFileChange}
                   />
                   <span className="form-help">Optional: Aktueller Lebenslauf für bessere Personalisierung</span>
                 </div>
@@ -104,16 +176,23 @@ export default function Bewerbung() {
                   <label className="form-label">
                     Branche/Bereich
                   </label>
-                  <select className="form-select">
-                    <option>IT/Software Entwicklung</option>
-                    <option>Marketing/Kommunikation</option>
-                    <option>Vertrieb/Sales</option>
-                    <option>Finanzen/Controlling</option>
-                    <option>HR/Personalwesen</option>
-                    <option>Consulting</option>
-                    <option>Gesundheitswesen</option>
-                    <option>Ingenieurswesen</option>
-                    <option>Andere</option>
+                  <select 
+                    name="industry"
+                    className="form-select"
+                    value={formData.industry}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Bitte wählen...</option>
+                    <option value="IT/Software Entwicklung">IT/Software Entwicklung</option>
+                    <option value="Marketing/Kommunikation">Marketing/Kommunikation</option>
+                    <option value="Vertrieb/Sales">Vertrieb/Sales</option>
+                    <option value="Finanzen/Controlling">Finanzen/Controlling</option>
+                    <option value="HR/Personalwesen">HR/Personalwesen</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Gesundheitswesen">Gesundheitswesen</option>
+                    <option value="Ingenieurswesen">Ingenieurswesen</option>
+                    <option value="Andere">Andere</option>
                   </select>
                 </div>
 
@@ -121,7 +200,13 @@ export default function Bewerbung() {
                   <label className="form-label">
                     Gewünschte Wirkung/Stil
                   </label>
-                  <select className="form-select">
+                  <select 
+                    name="style"
+                    className="form-select"
+                    value={formData.style}
+                    onChange={handleInputChange}
+                    required
+                  >
                     <option value="">Bitte wählen...</option>
                     <option value="professionell">Professionell & Seriös</option>
                     <option value="dynamisch">Dynamisch & Innovativ</option>
@@ -137,8 +222,11 @@ export default function Bewerbung() {
                   </label>
                   <input
                     type="email"
+                    name="email"
                     className="form-input"
                     placeholder="ihre@email.de"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required
                   />
                   <span className="form-help">Wir senden Ihre optimierten Unterlagen an diese Adresse</span>
@@ -149,9 +237,12 @@ export default function Bewerbung() {
                     Besondere Wünsche (optional)
                   </label>
                   <textarea
+                    name="specialRequests"
                     className="form-textarea"
                     rows={3}
                     placeholder="Spezielle Anforderungen, Tonalität, Schwerpunkte..."
+                    value={formData.specialRequests}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>

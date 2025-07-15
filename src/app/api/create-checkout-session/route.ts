@@ -5,10 +5,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(request: NextRequest) {
   try {
-    const { service } = await request.json()
+    const { service, formData } = await request.json()
     
     // Debug logging
     console.log('Service:', service)
+    console.log('FormData received:', !!formData)
     console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY)
     console.log('BASE_URL:', process.env.NEXT_PUBLIC_BASE_URL)
     
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
       cancel_url: `${baseUrl}/${service}`,
       metadata: {
         service: service,
+        formData: formData ? JSON.stringify(formData) : '',
       },
     })
 
