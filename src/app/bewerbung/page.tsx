@@ -107,7 +107,7 @@ export default function BewerbungPage() {
         formDataToSend.append('resumeFile', formData.resumeFile);
       }
 
-      const response = await fetch('/api/checkout', {
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         body: formDataToSend,
       });
