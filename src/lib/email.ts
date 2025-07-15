@@ -1,13 +1,13 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY!)
-
 export const sendOptimizedText = async (
   service: 'bewerbung' | 'dating' | 'bio',
   userEmail: string,
   optimizedText: string,
   userData: any
 ) => {
+  // Resend Client bei jedem Aufruf erstellen (für Build-Kompatibilität)
+  const resend = new Resend(process.env.RESEND_API_KEY!)
   const serviceNames = {
     bewerbung: 'Bewerbung',
     dating: 'Dating-Profil',
@@ -104,4 +104,4 @@ ${optimizedText}
   }
 }
 
-export { resend } 
+// Resend client wird jetzt bei jedem Aufruf erstellt 

@@ -1,13 +1,13 @@
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-})
-
 export const generateOptimizedText = async (
   service: 'bewerbung' | 'dating' | 'bio',
   userData: any
 ) => {
+  // OpenAI Client bei jedem Aufruf erstellen (für Build-Kompatibilität)
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  })
   const prompts = {
     bewerbung: `
 Als Experte für professionelle Bewerbungen, optimiere das folgende Anschreiben:
@@ -83,4 +83,4 @@ Antworte nur mit der optimierten Bio:`
   }
 }
 
-export { openai } 
+// OpenAI client wird jetzt bei jedem Aufruf erstellt 
