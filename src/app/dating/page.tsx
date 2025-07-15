@@ -44,7 +44,6 @@ export default function Dating() {
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <div className="service-badge badge-pink">Neu</div>
                 <h1 className="service-hero-title">Dating-Profil optimieren</h1>
                 <p className="service-hero-subtitle">Unwiderstehliche Profile für mehr Matches auf Dating-Apps</p>
                 <div className="service-hero-price">ab 19€</div>

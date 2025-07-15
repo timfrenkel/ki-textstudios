@@ -9,7 +9,6 @@ export default function Home() {
       description: 'KI-optimierte Anschreiben und Lebensläufe für Ihren Traumjob',
       price: '29€',
       image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&h=400&fit=crop',
-      badge: 'Beliebt',
       color: 'blue'
     },
     {
@@ -19,7 +18,6 @@ export default function Home() {
       description: 'Unwiderstehliche Profile für Dating-Apps und Partnerbörsen',
       price: '19€',
       image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=400&fit=crop',
-      badge: 'Neu',
       color: 'pink'
     },
     {
@@ -29,7 +27,6 @@ export default function Home() {
       description: 'Professionelle Bios für LinkedIn, Instagram und Co.',
       price: '15€',
       image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop',
-      badge: 'Schnell',
       color: 'green'
     }
   ]
@@ -100,7 +97,6 @@ export default function Home() {
                 href={`/${service.id}`} 
                 className="service-card card"
               >
-                <div className={`service-badge badge-${service.color}`}>{service.badge}</div>
                 <img 
                   src={service.image} 
                   alt={service.title} 

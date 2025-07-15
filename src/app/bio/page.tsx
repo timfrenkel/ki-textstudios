@@ -44,7 +44,6 @@ export default function Bio() {
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <div className="service-badge badge-green">Schnell</div>
                 <h1 className="service-hero-title">Social Media Bio optimieren</h1>
                 <p className="service-hero-subtitle">Überzeugende Bios für LinkedIn, Instagram und Co.</p>
                 <div className="service-hero-price">ab 15€</div>

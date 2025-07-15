@@ -44,7 +44,6 @@ export default function Bewerbung() {
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <div className="service-badge badge-blue">Beliebt</div>
                 <h1 className="service-hero-title">Bewerbung optimieren</h1>
                 <p className="service-hero-subtitle">KI-optimierte Anschreiben und Lebensläufe für Ihren Traumjob</p>
                 <div className="service-hero-price">ab 29€</div>
@@ -116,6 +115,20 @@ export default function Bewerbung() {
                     <option>Ingenieurswesen</option>
                     <option>Andere</option>
                   </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Gewünschte Wirkung/Stil
+                  </label>
+                  <select className="form-select">
+                    <option value="">Bitte wählen...</option>
+                    <option value="professionell">Professionell & Seriös</option>
+                    <option value="dynamisch">Dynamisch & Innovativ</option>
+                    <option value="sympathisch">Sympathisch & Nahbar</option>
+                    <option value="fuehrungsstark">Führungsstark & Durchsetzungsfähig</option>
+                  </select>
+                  <span className="form-help">Wie möchten Sie auf potenzielle Arbeitgeber wirken?</span>
                 </div>
 
                 <div className="form-group">
