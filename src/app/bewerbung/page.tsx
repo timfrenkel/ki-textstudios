@@ -32,74 +32,161 @@ export default function Bewerbung() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            Bewerbung optimieren
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Lade deine Bewerbungsunterlagen hoch und erhalte eine KI-optimierte Version.
-          </p>
-
-          <form className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stellenausschreibung
-              </label>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                rows={4}
-                placeholder="Füge hier die Stellenausschreibung ein..."
-              />
+    <div className="service-page">
+      {/* Hero Section */}
+      <section className="service-hero">
+        <div className="service-hero-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1920&h=600&fit=crop" 
+            alt="Bewerbung optimieren" 
+            className="hero-bg"
+          />
+          <div className="hero-overlay">
+            <div className="container">
+              <div className="service-hero-content">
+                <div className="service-badge badge-blue">Beliebt</div>
+                <h1 className="service-hero-title">Bewerbung optimieren</h1>
+                <p className="service-hero-subtitle">KI-optimierte Anschreiben und Lebensläufe für Ihren Traumjob</p>
+                <div className="service-hero-price">ab 29€</div>
+              </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Dein aktuelles Anschreiben
-              </label>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                rows={6}
-                placeholder="Dein aktuelles Anschreiben..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Lebenslauf (PDF)
-              </label>
-              <input
-                type="file"
-                accept=".pdf"
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Branche/Bereich
-              </label>
-              <select className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <option>IT/Software</option>
-                <option>Marketing</option>
-                <option>Vertrieb</option>
-                <option>Finance</option>
-                <option>Andere</option>
-              </select>
-            </div>
-
-            <button
-              type="button"
-              onClick={handlePayment}
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
-            >
-              {loading ? 'Weiterleitung...' : 'Jetzt optimieren - 29€'}
-            </button>
-          </form>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Form Section */}
+      <section className="service-form-section section-padding">
+        <div className="container">
+          <div className="service-form-wrapper">
+            <div className="service-form-header">
+              <h2>Ihre Bewerbung perfektionieren</h2>
+              <p>Geben Sie Ihre Daten ein und erhalten Sie innerhalb von 24h eine KI-optimierte Bewerbung</p>
+            </div>
+
+            <form className="service-form">
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label className="form-label">
+                    Stellenausschreibung
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    rows={4}
+                    placeholder="Fügen Sie hier die komplette Stellenausschreibung ein..."
+                  />
+                  <span className="form-help">Kopieren Sie die vollständige Stellenausschreibung für beste Ergebnisse</span>
+                </div>
+
+                <div className="form-group full-width">
+                  <label className="form-label">
+                    Ihr aktuelles Anschreiben
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    rows={8}
+                    placeholder="Ihr aktuelles Anschreiben oder Stichpunkte zu Ihren Qualifikationen..."
+                  />
+                  <span className="form-help">Auch Stichpunkte oder unvollständige Texte sind ausreichend</span>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Lebenslauf (PDF)
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="form-file"
+                  />
+                  <span className="form-help">Optional: Aktueller Lebenslauf für bessere Personalisierung</span>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Branche/Bereich
+                  </label>
+                  <select className="form-select">
+                    <option>IT/Software Entwicklung</option>
+                    <option>Marketing/Kommunikation</option>
+                    <option>Vertrieb/Sales</option>
+                    <option>Finanzen/Controlling</option>
+                    <option>HR/Personalwesen</option>
+                    <option>Consulting</option>
+                    <option>Gesundheitswesen</option>
+                    <option>Ingenieurswesen</option>
+                    <option>Andere</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    E-Mail für Zusendung
+                  </label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="ihre@email.de"
+                    required
+                  />
+                  <span className="form-help">Wir senden Ihre optimierten Unterlagen an diese Adresse</span>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    Besondere Wünsche (optional)
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    rows={3}
+                    placeholder="Spezielle Anforderungen, Tonalität, Schwerpunkte..."
+                  />
+                </div>
+              </div>
+
+              <div className="service-summary">
+                <div className="summary-content">
+                  <h3>Was Sie erhalten:</h3>
+                  <ul className="summary-list">
+                    <li>✓ KI-optimiertes Anschreiben, perfekt auf die Stelle zugeschnitten</li>
+                    <li>✓ Überarbeiteter Lebenslauf mit professioneller Formatierung</li>
+                    <li>✓ ATS-optimiert für automatische Bewerbungssysteme</li>
+                    <li>✓ Persönliche Empfehlungen für Ihre Bewerbungsstrategie</li>
+                    <li>✓ Lieferung innerhalb von 24 Stunden</li>
+                  </ul>
+                  <div className="summary-price">
+                    <span className="price-label">Gesamtpreis:</span>
+                    <span className="price-value">29€</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={handlePayment}
+                  disabled={loading}
+                  className="btn-payment"
+                >
+                  {loading ? (
+                    <>
+                      <span className="payment-spinner"></span>
+                      Weiterleitung zu Stripe...
+                    </>
+                  ) : (
+                    <>
+                      Jetzt optimieren - 29€
+                      <span className="payment-secure">🔒 Sichere Zahlung über Stripe</span>
+                    </>
+                  )}
+                </button>
+                <p className="payment-note">
+                  Nach der Zahlung bearbeiten wir Ihre Bewerbung und senden sie innerhalb von 24h an Ihre E-Mail-Adresse.
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
     </div>
   )
 } 
