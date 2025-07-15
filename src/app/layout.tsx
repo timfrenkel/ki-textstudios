@@ -21,7 +21,7 @@ export default function RootLayout({
           <div className="container">
             <div className="header-content">
               <a href="/" className="logo">
-                <h1>KI Text Studio</h1>
+                <h1>KI Text Studio <span className="logo-byline">by loopnex</span></h1>
               </a>
               <nav className="nav">
                 <a href="/bewerbung" className="nav-link">

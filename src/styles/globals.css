@@ -100,6 +100,14 @@ img {
   color: var(--accent-gold);
 }
 
+.logo-byline {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-light);
+  margin-left: var(--spacing-sm);
+  opacity: 0.8;
+}
+
 .nav {
   display: flex;
   gap: var(--spacing-2xl);
