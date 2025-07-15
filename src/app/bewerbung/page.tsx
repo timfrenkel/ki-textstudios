@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Stepper from '@/components/stepper';
-import { Button } from '@/components/button';
 
 interface FormData {
   jobDetails: string;
@@ -128,159 +126,135 @@ export default function BewerbungPage() {
     }
   };
 
-  const renderStep = () => {
+  const renderFormContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📝 Jobdetails
-              </h2>
-              <p className="text-gray-600">
-                Füge hier die komplette Stellenausschreibung ein
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stellenausschreibung *
+          <div className="form-grid">
+            <div className="form-group full-width">
+              <label className="form-label">
+                📝 Stellenausschreibung *
               </label>
               <textarea
                 value={formData.jobDetails}
                 onChange={(e) => setFormData(prev => ({ ...prev, jobDetails: e.target.value }))}
-                className={`w-full p-4 border rounded-lg h-80 resize-none ${
-                  errors.jobDetails ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                placeholder="Kopiere hier die komplette Stellenausschreibung..."
+                className={`form-textarea ${errors.jobDetails ? 'error' : ''}`}
+                rows={12}
+                placeholder="Kopiere hier die komplette Stellenausschreibung... GPT holt sich daraus alle wichtigen Informationen: Aufgaben, Anforderungen, Keywords und Tonalität."
+                style={{ minHeight: '300px' }}
               />
               {errors.jobDetails && (
-                <p className="text-red-500 text-sm mt-1">{errors.jobDetails}</p>
+                <span className="form-help" style={{ color: 'red' }}>{errors.jobDetails}</span>
               )}
+              <span className="form-help">
+                ✅ Füge die komplette Stellenausschreibung ein - GPT analysiert automatisch alle relevanten Details
+              </span>
             </div>
           </div>
         );
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                👤 Dein Hintergrund
-              </h2>
-              <p className="text-gray-600">
-                Erzähl uns kurz von dir
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Deine Erfahrung und Hintergrund *
+          <div className="form-grid">
+            <div className="form-group full-width">
+              <label className="form-label">
+                👤 Deine Erfahrung und Hintergrund *
               </label>
               <textarea
                 value={formData.background}
                 onChange={(e) => setFormData(prev => ({ ...prev, background: e.target.value }))}
-                className={`w-full p-4 border rounded-lg h-64 resize-none ${
-                  errors.background ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                className={`form-textarea ${errors.background ? 'error' : ''}`}
+                rows={10}
                 placeholder="Ich bin UX-Designer mit 3 Jahren Erfahrung, arbeite aktuell bei Firma XY. Ich habe vorher Medieninformatik studiert, bin stark in Figma, HTML und Kommunikation. Ich möchte in ein kreativeres Umfeld wechseln."
+                style={{ minHeight: '250px' }}
               />
               {errors.background && (
-                <p className="text-red-500 text-sm mt-1">{errors.background}</p>
+                <span className="form-help" style={{ color: 'red' }}>{errors.background}</span>
               )}
-              <p className="text-sm text-gray-500 mt-2">
-                Teile mit: aktueller Job, vorherige Stationen, Ausbildung, Stärken/Tools/Soft Skills
-              </p>
+              <span className="form-help">
+                Teile mit: aktueller Job, 1-2 vorherige Stationen, Ausbildung, Stärken/Tools/Soft Skills
+              </span>
             </div>
           </div>
         );
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📦 Zusätzliche Informationen
-              </h2>
-              <p className="text-gray-600">
-                Vervollständige dein Profil
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Besondere Wünsche (optional)
+          <div className="form-grid">
+            <div className="form-group full-width">
+              <label className="form-label">
+                📦 Besondere Wünsche (optional)
               </label>
               <textarea
                 value={formData.specialRequests}
                 onChange={(e) => setFormData(prev => ({ ...prev, specialRequests: e.target.value }))}
-                className="w-full p-4 border border-gray-300 rounded-lg h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-textarea"
+                rows={4}
                 placeholder="Ich will selbstbewusst wirken, bitte die Führungsstärke betonen. Ich war 6 Monate in Elternzeit – das elegant einbauen."
               />
-              <p className="text-sm text-gray-500 mt-1">
-                z.B. Stil, Fokus, Lücken, Ton
-              </p>
+              <span className="form-help">
+                z.B. Stil, Fokus, Lücken im Lebenslauf, spezielle Betonungen
+              </span>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                📎 Lebenslauf (optional)
+            <div className="form-group">
+              <label className="form-label">
+                📎 Lebenslauf (PDF, optional)
               </label>
               <input
                 type="file"
                 accept=".pdf"
                 onChange={handleFileUpload}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-file"
               />
-              <p className="text-sm text-gray-500 mt-1">
-                PDF-Format, max. 10MB
-              </p>
+              <span className="form-help">
+                PDF-Format, max. 10MB - für bessere Personalisierung
+              </span>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label className="form-label">
                 LinkedIn-Profil (optional)
               </label>
               <input
                 type="url"
                 value={formData.linkedinUrl}
                 onChange={(e) => setFormData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="form-input"
                 placeholder="https://linkedin.com/in/dein-profil"
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <span className="form-help">
                 Alternative zum Lebenslauf-Upload
-              </p>
+              </span>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                E-Mail-Adresse *
+            <div className="form-group">
+              <label className="form-label">
+                📧 E-Mail-Adresse *
               </label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className={`w-full p-3 border rounded-lg ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                className={`form-input ${errors.email ? 'error' : ''}`}
                 placeholder="deine@email.de"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                <span className="form-help" style={{ color: 'red' }}>{errors.email}</span>
               )}
+              <span className="form-help">
+                Wir senden dein optimiertes Anschreiben an diese Adresse
+              </span>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label className="form-label">
                 🎙️ Wie soll dein Anschreiben klingen? *
               </label>
               <select
                 value={formData.tone}
                 onChange={(e) => setFormData(prev => ({ ...prev, tone: e.target.value }))}
-                className={`w-full p-3 border rounded-lg ${
-                  errors.tone ? 'border-red-500' : 'border-gray-300'
-                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                className={`form-select ${errors.tone ? 'error' : ''}`}
               >
                 <option value="">Tonfall wählen</option>
                 <option value="freundlich-engagiert">Freundlich & engagiert</option>
@@ -289,35 +263,31 @@ export default function BewerbungPage() {
                 <option value="kreativ-locker">Kreativ & locker</option>
               </select>
               {errors.tone && (
-                <p className="text-red-500 text-sm mt-1">{errors.tone}</p>
+                <span className="form-help" style={{ color: 'red' }}>{errors.tone}</span>
               )}
+              <span className="form-help">
+                Wähle den passenden Stil für deine Branche
+              </span>
             </div>
           </div>
         );
 
       case 4:
         return (
-          <div className="text-center space-y-6">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                💳 Bezahlung
-              </h2>
-              <p className="text-gray-600">
-                Sichere Bezahlung über Stripe
-              </p>
-            </div>
-
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600 mb-2">29€</div>
-              <div className="text-gray-600 mb-4">
-                Einmalige Zahlung für dein optimiertes Bewerbungsschreiben
-              </div>
-              <ul className="text-sm text-gray-500 space-y-1">
-                <li>✅ KI-optimiertes Anschreiben</li>
-                <li>✅ Auf die Stelle zugeschnitten</li>
-                <li>✅ Professionelle Sprache</li>
-                <li>✅ Zustellung in wenigen Minuten</li>
+          <div className="service-summary">
+            <div className="summary-content">
+              <h3>Was du erhältst:</h3>
+              <ul className="summary-list">
+                <li>✓ KI-optimiertes Anschreiben, perfekt auf die Stelle zugeschnitten</li>
+                <li>✓ Professionelle Sprache und Struktur</li>
+                <li>✓ Keyword-optimiert für ATS-Systeme</li>
+                <li>✓ Passend zu deinem gewählten Tonfall</li>
+                <li>✓ Zustellung in wenigen Minuten per E-Mail</li>
               </ul>
+              <div className="summary-price">
+                <span className="price-label">Gesamtpreis:</span>
+                <span className="price-value">29€</span>
+              </div>
             </div>
           </div>
         );
@@ -328,53 +298,116 @@ export default function BewerbungPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
-              📝 Bewerbungsschreiben optimieren
-            </h1>
-            <p className="text-center text-gray-600">
-              Lass KI dein perfektes Anschreiben erstellen
-            </p>
-          </div>
-
-          <Stepper currentStep={currentStep} steps={steps} />
-
-          <div className="mt-8">
-            {renderStep()}
-          </div>
-
-          <div className="flex justify-between mt-8">
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 1}
-              className={currentStep === 1 ? 'invisible' : ''}
-            >
-              Zurück
-            </Button>
-
-            <Button
-              onClick={handleNext}
-              disabled={isLoading}
-              className="min-w-32"
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Laden...
-                </div>
-              ) : currentStep === steps.length ? (
-                'Jetzt bezahlen'
-              ) : (
-                'Weiter'
-              )}
-            </Button>
+    <div className="service-page">
+      {/* Hero Section */}
+      <section className="service-hero">
+        <div className="service-hero-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1920&h=600&fit=crop" 
+            alt="Bewerbung optimieren" 
+            className="hero-bg"
+          />
+          <div className="hero-overlay">
+            <div className="container">
+              <div className="service-hero-content">
+                <h1 className="service-hero-title">Bewerbung optimieren</h1>
+                <p className="service-hero-subtitle">
+                  Lass KI dein perfektes Anschreiben erstellen - maßgeschneidert für deine Traumstelle
+                </p>
+                <div className="service-hero-price">29€</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Form Section */}
+      <section className="service-form-section section-padding">
+        <div className="container">
+          <div className="service-form-wrapper">
+            <div className="service-form-header">
+              <h2>Dein optimiertes Anschreiben</h2>
+              <p>Folge den Schritten und erhalte in wenigen Minuten dein KI-optimiertes Bewerbungsschreiben</p>
+            </div>
+
+            <div className="service-form">
+              {/* Progress Indicator */}
+              <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                <div className="form-label" style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>
+                  Schritt {currentStep} von {steps.length}: {steps[currentStep - 1]}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+                  {steps.map((_, index) => (
+                    <div 
+                      key={index}
+                      style={{
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50%',
+                        background: index + 1 <= currentStep ? 'var(--accent-gold)' : 'var(--light-gray)'
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Form Content */}
+              {renderFormContent()}
+
+              {/* Navigation Buttons */}
+              <div className="form-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                {currentStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="btn-payment"
+                    style={{ 
+                      background: 'var(--light-gray)', 
+                      color: 'var(--text-dark)',
+                      minWidth: '150px',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    ← Zurück
+                  </button>
+                )}
+                
+                <div style={{ marginLeft: 'auto' }}>
+                  {currentStep === steps.length ? (
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={isLoading}
+                      className="btn-payment"
+                    >
+                      {isLoading ? (
+                        <>
+                          <span className="payment-spinner"></span>
+                          Weiterleitung zu Stripe...
+                        </>
+                      ) : (
+                        <>
+                          Jetzt optimieren - 29€
+                          <span className="payment-secure">🔒 Sichere Zahlung über Stripe</span>
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="btn-payment"
+                      style={{ minWidth: '150px', fontSize: '1rem' }}
+                    >
+                      Weiter →
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 } 
