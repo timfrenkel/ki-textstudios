@@ -6,45 +6,48 @@ import Link from 'next/link';
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      // Only apply scroll behavior on mobile (max-width: 768px)
-      if (window.innerWidth <= 768) {
+      if (isMobile) {
         if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          // Scrolling down - hide navigation and badge
           setIsScrolled(true);
         } else if (currentScrollY < lastScrollY) {
-          // Scrolling up - show full header
           setIsScrolled(false);
         }
       } else {
-        // On desktop, always show full header
         setIsScrolled(false);
       }
-      
       setLastScrollY(currentScrollY);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isMobile]);
 
   return (
-    <header className={`header ${isScrolled ? 'header-scrolled' : ''}`}>
+    <header className={`header${isScrolled && isMobile ? ' header-compact' : ''} ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="container">
         <div className="header-content">
           <Link href="/" className="logo">
             <h1>KI Text Studio <span className="logo-byline">by loopnex</span></h1>
           </Link>
-          <div className={`header-badge ${isScrolled ? 'header-badge-hidden' : ''}`}>
+          <div className={`header-badge${isScrolled ? ' header-badge-hidden' : ''}`}>
             <div className="launch-badge">
               🚀 Launch-Angebot • 50% Rabatt • Experten-KI
             </div>
           </div>
-          <nav className={`nav ${isScrolled ? 'nav-hidden' : ''}`}>
+          <nav className={`nav${isScrolled ? ' nav-hidden' : ''}`}>
             <Link href="/bewerbung" className="nav-link">
               Bewerbung
             </Link>
