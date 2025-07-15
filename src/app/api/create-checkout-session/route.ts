@@ -5,11 +5,27 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(request: NextRequest) {
   try {
-    const { service, formData } = await request.json()
+    let service: string
+    let formDataObj: any = {}
+    
+    // Check if request is FormData or JSON
+    const contentType = request.headers.get('content-type')
+    
+    if (contentType?.includes('multipart/form-data')) {
+      // Handle FormData (Bewerbung)
+      const formData = await request.formData()
+      service = formData.get('service') as string
+      formDataObj = Object.fromEntries(formData)
+    } else {
+      // Handle JSON (Dating, Bio)
+      const { service: jsonService, formData: jsonFormData } = await request.json()
+      service = jsonService
+      formDataObj = jsonFormData
+    }
     
     // Debug logging
     console.log('Service:', service)
-    console.log('FormData received:', !!formData)
+    console.log('FormData received:', !!formDataObj)
     console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY)
     console.log('BASE_URL:', process.env.NEXT_PUBLIC_BASE_URL)
     
@@ -44,12 +60,20 @@ export async function POST(request: NextRequest) {
       cancel_url: `${baseUrl}/${service}`,
       metadata: {
         service: service,
-        formData: formData ? JSON.stringify(formData) : '',
+        formData: JSON.stringify(formDataObj),
       },
     })
 
     console.log('Session created successfully:', session.id)
-    return NextResponse.json({ sessionId: session.id })
+    
+    // Return different response format based on request type
+    if (contentType?.includes('multipart/form-data')) {
+      // FormData request (Bewerbung) - return URL directly
+      return NextResponse.json({ url: session.url })
+    } else {
+      // JSON request (Dating, Bio) - return sessionId for redirect
+      return NextResponse.json({ sessionId: session.id })
+    }
   } catch (error) {
     console.error('Stripe error details:', error)
     console.error('Error message:', error instanceof Error ? error.message : 'Unknown error')
