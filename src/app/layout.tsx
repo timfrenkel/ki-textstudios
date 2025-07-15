@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
+import Header from '../components/header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,31 +18,7 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={inter.className}>
-        <header className="header">
-          <div className="container">
-            <div className="header-content">
-              <a href="/" className="logo">
-                <h1>KI Text Studio <span className="logo-byline">by loopnex</span></h1>
-              </a>
-              <div className="header-badge">
-                <div className="launch-badge">
-                  🚀 Launch-Angebot • 50% Rabatt • Experten-KI
-                </div>
-              </div>
-              <nav className="nav">
-                <a href="/bewerbung" className="nav-link">
-                  Bewerbung
-                </a>
-                <a href="/dating" className="nav-link">
-                  Dating
-                </a>
-                <a href="/bio" className="nav-link">
-                  Bio
-                </a>
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header />
 
         {children}
 

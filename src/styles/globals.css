@@ -80,6 +80,29 @@ img {
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--light-gray);
+  transition: all 0.3s ease;
+}
+
+.header-scrolled {
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.header-badge,
+.nav {
+  transition: all 0.3s ease;
+}
+
+.header-badge-hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.nav-hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }
 
 .header-content {
@@ -147,6 +170,22 @@ img {
 
 .nav-link:hover::after {
   width: 100%;
+}
+
+.nav-link-disabled {
+  color: var(--text-light);
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-link-disabled:hover {
+  color: var(--text-light);
+  opacity: 0.6;
+}
+
+.nav-link-disabled::after {
+  display: none;
 }
 
 /* Footer Styles */
@@ -1173,6 +1212,27 @@ img {
     gap: var(--spacing-lg);
   }
 
+  /* Mobile Header Scroll Behavior */
+  .header-badge-hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .nav-hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .header-scrolled .header-content {
+    padding: var(--spacing-sm) 0;
+  }
+
   .hero-title {
     font-size: 2.8rem;
   }
@@ -1208,6 +1268,139 @@ img {
   .footer-content {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  /* Service Cards Mobile - Full Width */
+  .service-card,
+  .service-card-clickable {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 calc(-1 * var(--spacing-md));
+    padding: var(--spacing-lg) var(--spacing-md);
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .service-card:hover,
+  .service-card-clickable:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .service-image {
+    border-radius: 8px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .service-info {
+    padding: 0;
+  }
+
+  .service-title {
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .service-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .service-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .service-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .service-price-container {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .service-cta {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: var(--spacing-sm) 0;
+  }
+
+  /* Feature Items Mobile - Full Width */
+  .feature-item {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 calc(-1 * var(--spacing-md));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .feature-item:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .feature-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .feature-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Step Items Mobile - Full Width */
+  .step-item {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 calc(-1 * var(--spacing-md));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .step-item:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .step-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .step-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ATS Problem Cards Mobile - Full Width */
+  .ats-problem-card {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 calc(-1 * var(--spacing-md));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .ats-problem-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .ats-problem-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .ats-problem-card p {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   /* Service Page Mobile */
