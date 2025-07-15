@@ -272,25 +272,35 @@ export default function BewerbungPage() {
           </div>
         );
 
-      case 4:
-        return (
-          <div className="service-summary">
-            <div className="summary-content">
-              <h3>Was du erhältst:</h3>
-              <ul className="summary-list">
-                <li>✓ KI-optimiertes Anschreiben, perfekt auf die Stelle zugeschnitten</li>
-                <li>✓ Professionelle Sprache und Struktur</li>
-                <li>✓ Keyword-optimiert für ATS-Systeme</li>
-                <li>✓ Passend zu deinem gewählten Tonfall</li>
-                <li>✓ Zustellung in wenigen Minuten per E-Mail</li>
-              </ul>
-              <div className="summary-price">
-                <span className="price-label">Gesamtpreis:</span>
-                <span className="price-value">29€</span>
+              case 4:
+          return (
+            <div className="service-summary">
+              <div className="summary-content">
+                <h3>Warum nicht einfach ChatGPT?</h3>
+                <div className="comparison-box">
+                  <div><strong>ChatGPT allein:</strong> Vage Prompts → Generische Texte → Stundenlange Anpassungen → Trotzdem unprofessionell</div>
+                  <div><strong className="highlight">Unser Service:</strong> Expertenanalyse → Maßgeschneidert → ATS-optimiert → Sofort einsatzbereit</div>
+                </div>
+                
+                <h3>Was du erhältst:</h3>
+                <ul className="summary-list">
+                  <li>✓ <strong>Deutsche Bewerbungsexperten-KI</strong> statt generisches ChatGPT</li>
+                  <li>✓ <strong>Automatische Stellenanalyse</strong> - extrahiert alle relevanten Keywords</li>
+                  <li>✓ <strong>ATS-System Optimierung</strong> - wird von Bewerbungsrobotern erkannt</li>
+                  <li>✓ <strong>Professionelle Struktur</strong> nach deutschen Standards</li>
+                  <li>✓ <strong>Branchenspezifischer Tonfall</strong> - von sympathisch bis führungsstark</li>
+                  <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
+                </ul>
+                <div className="summary-price">
+                  <span className="price-label">Investition in deine Zukunft:</span>
+                  <span className="price-value">29€</span>
+                </div>
+                <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                  Spart dir 3-5 Stunden Arbeit und erhöht deine Chancen deutlich
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
 
       default:
         return null;
@@ -312,9 +322,19 @@ export default function BewerbungPage() {
               <div className="service-hero-content">
                 <h1 className="service-hero-title">Bewerbung optimieren</h1>
                 <p className="service-hero-subtitle">
-                  Lass KI dein perfektes Anschreiben erstellen - maßgeschneidert für deine Traumstelle
+                  Professionelle KI-Anschreiben in 5 Minuten - ohne stundenlanges Prompt-Engineering
                 </p>
-                <div className="service-hero-price">29€</div>
+                <div className="usp-box">
+                  <div className="usp-title">
+                    🚀 Besser als ChatGPT allein:
+                  </div>
+                  <div className="usp-grid">
+                    <div>✅ Speziell für deutsche Bewerbungen</div>
+                    <div>✅ Automatische Keyword-Optimierung</div>
+                    <div>✅ ATS-System kompatibel</div>
+                    <div>✅ Perfekte Struktur & Formatierung</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -332,20 +352,15 @@ export default function BewerbungPage() {
 
             <div className="service-form">
               {/* Progress Indicator */}
-              <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                <div className="form-label" style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>
+              <div className="progress-indicator">
+                <div className="progress-text">
                   Schritt {currentStep} von {steps.length}: {steps[currentStep - 1]}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+                <div className="progress-dots">
                   {steps.map((_, index) => (
                     <div 
                       key={index}
-                      style={{
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50%',
-                        background: index + 1 <= currentStep ? 'var(--accent-gold)' : 'var(--light-gray)'
-                      }}
+                      className={`progress-dot ${index + 1 <= currentStep ? 'active' : ''}`}
                     />
                   ))}
                 </div>
@@ -355,24 +370,18 @@ export default function BewerbungPage() {
               {renderFormContent()}
 
               {/* Navigation Buttons */}
-              <div className="form-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+              <div className="form-navigation">
                 {currentStep > 1 && (
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="btn-payment"
-                    style={{ 
-                      background: 'var(--light-gray)', 
-                      color: 'var(--text-dark)',
-                      minWidth: '150px',
-                      fontSize: '1rem'
-                    }}
+                    className="btn-payment btn-back"
                   >
                     ← Zurück
                   </button>
                 )}
                 
-                <div style={{ marginLeft: 'auto' }}>
+                <div className="nav-right">
                   {currentStep === steps.length ? (
                     <button
                       type="button"
@@ -396,8 +405,7 @@ export default function BewerbungPage() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="btn-payment"
-                      style={{ minWidth: '150px', fontSize: '1rem' }}
+                      className="btn-payment btn-next"
                     >
                       Weiter →
                     </button>
