@@ -1,296 +1,380 @@
-'use client'
+'use client';
 
-import { useState, FormEvent } from 'react'
-import { getStripe } from '@/lib/stripe'
+import React, { useState } from 'react';
+import Stepper from '@/components/stepper';
+import { Button } from '@/components/button';
 
 interface FormData {
-  jobDescription: string
-  currentLetter: string
-  resume?: File
-  industry: string
-  style: string
-  email: string
-  specialRequests: string
+  jobDetails: string;
+  background: string;
+  specialRequests: string;
+  resumeFile?: File;
+  linkedinUrl: string;
+  email: string;
+  tone: string;
 }
 
-export default function Bewerbung() {
-  const [loading, setLoading] = useState(false)
+export default function BewerbungPage() {
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    jobDescription: '',
-    currentLetter: '',
-    industry: '',
-    style: '',
+    jobDetails: '',
+    background: '',
+    specialRequests: '',
+    linkedinUrl: '',
     email: '',
-    specialRequests: ''
-  })
+    tone: ''
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  const steps = [
+    'Jobdetails',
+    'Dein Hintergrund', 
+    'Zusätzliche Infos',
+    'Bezahlung'
+  ];
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setFormData(prev => ({
-        ...prev,
-        resume: file
-      }))
-    }
-  }
+  const validateStep = (step: number): boolean => {
+    const newErrors: Record<string, string> = {};
 
-  const validateForm = () => {
-    if (!formData.jobDescription.trim()) {
-      alert('Bitte geben Sie eine Stellenausschreibung ein.')
-      return false
-    }
-    if (!formData.currentLetter.trim()) {
-      alert('Bitte geben Sie Ihr aktuelles Anschreiben ein.')
-      return false
-    }
-    if (!formData.email.trim()) {
-      alert('Bitte geben Sie eine E-Mail-Adresse ein.')
-      return false
-    }
-    if (!formData.style) {
-      alert('Bitte wählen Sie eine gewünschte Wirkung aus.')
-      return false
-    }
-    return true
-  }
-
-  const handlePayment = async () => {
-    if (!validateForm()) return
-
-    setLoading(true)
-    
-    try {
-      // Formular-Daten zur Session hinzufügen
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          service: 'bewerbung',
-          formData: formData 
-        }),
-      })
-
-      const { sessionId } = await response.json()
-      const stripe = await getStripe()
-      
-      if (stripe) {
-        await stripe.redirectToCheckout({ sessionId })
+    if (step === 1) {
+      if (!formData.jobDetails.trim()) {
+        newErrors.jobDetails = 'Bitte füge die Stellenausschreibung ein';
       }
-    } catch (error) {
-      console.error('Payment error:', error)
-      alert('Fehler beim Weiterleiten zur Zahlung. Bitte versuchen Sie es erneut.')
-    } finally {
-      setLoading(false)
     }
-  }
+
+    if (step === 2) {
+      if (!formData.background.trim()) {
+        newErrors.background = 'Bitte erzähl uns von dir';
+      }
+    }
+
+    if (step === 3) {
+      if (!formData.email.trim()) {
+        newErrors.email = 'E-Mail-Adresse ist erforderlich';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Ungültige E-Mail-Adresse';
+      }
+      
+      if (!formData.tone) {
+        newErrors.tone = 'Bitte wähle einen Tonfall';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      if (currentStep < steps.length) {
+        setCurrentStep(currentStep + 1);
+      } else {
+        handleSubmit();
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setFormData(prev => ({ ...prev, resumeFile: file }));
+    } else {
+      alert('Bitte lade nur PDF-Dateien hoch');
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!validateStep(3)) return;
+
+    setIsLoading(true);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('service', 'bewerbung');
+      formDataToSend.append('jobDetails', formData.jobDetails);
+      formDataToSend.append('background', formData.background);
+      formDataToSend.append('specialRequests', formData.specialRequests);
+      formDataToSend.append('linkedinUrl', formData.linkedinUrl);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('tone', formData.tone);
+      
+      if (formData.resumeFile) {
+        formDataToSend.append('resumeFile', formData.resumeFile);
+      }
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error('Fehler beim Erstellen der Zahlung');
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('Es gab einen Fehler. Bitte versuche es erneut.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                📝 Jobdetails
+              </h2>
+              <p className="text-gray-600">
+                Füge hier die komplette Stellenausschreibung ein
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Stellenausschreibung *
+              </label>
+              <textarea
+                value={formData.jobDetails}
+                onChange={(e) => setFormData(prev => ({ ...prev, jobDetails: e.target.value }))}
+                className={`w-full p-4 border rounded-lg h-80 resize-none ${
+                  errors.jobDetails ? 'border-red-500' : 'border-gray-300'
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                placeholder="Kopiere hier die komplette Stellenausschreibung..."
+              />
+              {errors.jobDetails && (
+                <p className="text-red-500 text-sm mt-1">{errors.jobDetails}</p>
+              )}
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                👤 Dein Hintergrund
+              </h2>
+              <p className="text-gray-600">
+                Erzähl uns kurz von dir
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Deine Erfahrung und Hintergrund *
+              </label>
+              <textarea
+                value={formData.background}
+                onChange={(e) => setFormData(prev => ({ ...prev, background: e.target.value }))}
+                className={`w-full p-4 border rounded-lg h-64 resize-none ${
+                  errors.background ? 'border-red-500' : 'border-gray-300'
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                placeholder="Ich bin UX-Designer mit 3 Jahren Erfahrung, arbeite aktuell bei Firma XY. Ich habe vorher Medieninformatik studiert, bin stark in Figma, HTML und Kommunikation. Ich möchte in ein kreativeres Umfeld wechseln."
+              />
+              {errors.background && (
+                <p className="text-red-500 text-sm mt-1">{errors.background}</p>
+              )}
+              <p className="text-sm text-gray-500 mt-2">
+                Teile mit: aktueller Job, vorherige Stationen, Ausbildung, Stärken/Tools/Soft Skills
+              </p>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                📦 Zusätzliche Informationen
+              </h2>
+              <p className="text-gray-600">
+                Vervollständige dein Profil
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Besondere Wünsche (optional)
+              </label>
+              <textarea
+                value={formData.specialRequests}
+                onChange={(e) => setFormData(prev => ({ ...prev, specialRequests: e.target.value }))}
+                className="w-full p-4 border border-gray-300 rounded-lg h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ich will selbstbewusst wirken, bitte die Führungsstärke betonen. Ich war 6 Monate in Elternzeit – das elegant einbauen."
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                z.B. Stil, Fokus, Lücken, Ton
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📎 Lebenslauf (optional)
+              </label>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileUpload}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                PDF-Format, max. 10MB
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                LinkedIn-Profil (optional)
+              </label>
+              <input
+                type="url"
+                value={formData.linkedinUrl}
+                onChange={(e) => setFormData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://linkedin.com/in/dein-profil"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Alternative zum Lebenslauf-Upload
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                E-Mail-Adresse *
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                className={`w-full p-3 border rounded-lg ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                placeholder="deine@email.de"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🎙️ Wie soll dein Anschreiben klingen? *
+              </label>
+              <select
+                value={formData.tone}
+                onChange={(e) => setFormData(prev => ({ ...prev, tone: e.target.value }))}
+                className={`w-full p-3 border rounded-lg ${
+                  errors.tone ? 'border-red-500' : 'border-gray-300'
+                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              >
+                <option value="">Tonfall wählen</option>
+                <option value="freundlich-engagiert">Freundlich & engagiert</option>
+                <option value="klar-sachlich">Klar & sachlich</option>
+                <option value="selbstbewusst-direkt">Selbstbewusst & direkt</option>
+                <option value="kreativ-locker">Kreativ & locker</option>
+              </select>
+              {errors.tone && (
+                <p className="text-red-500 text-sm mt-1">{errors.tone}</p>
+              )}
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="text-center space-y-6">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                💳 Bezahlung
+              </h2>
+              <p className="text-gray-600">
+                Sichere Bezahlung über Stripe
+              </p>
+            </div>
+
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="text-3xl font-bold text-blue-600 mb-2">29€</div>
+              <div className="text-gray-600 mb-4">
+                Einmalige Zahlung für dein optimiertes Bewerbungsschreiben
+              </div>
+              <ul className="text-sm text-gray-500 space-y-1">
+                <li>✅ KI-optimiertes Anschreiben</li>
+                <li>✅ Auf die Stelle zugeschnitten</li>
+                <li>✅ Professionelle Sprache</li>
+                <li>✅ Zustellung in wenigen Minuten</li>
+              </ul>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="service-page">
-      {/* Hero Section */}
-      <section className="service-hero">
-        <div className="service-hero-bg">
-          <img 
-            src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1920&h=600&fit=crop" 
-            alt="Bewerbung optimieren" 
-            className="hero-bg"
-          />
-          <div className="hero-overlay">
-            <div className="container">
-              <div className="service-hero-content">
-                <h1 className="service-hero-title">Bewerbung optimieren</h1>
-                <p className="service-hero-subtitle">KI-optimierte Anschreiben und Lebensläufe für Ihren Traumjob</p>
-                <div className="service-hero-price">ab 29€</div>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
+              📝 Bewerbungsschreiben optimieren
+            </h1>
+            <p className="text-center text-gray-600">
+              Lass KI dein perfektes Anschreiben erstellen
+            </p>
+          </div>
+
+          <Stepper currentStep={currentStep} steps={steps} />
+
+          <div className="mt-8">
+            {renderStep()}
+          </div>
+
+          <div className="flex justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              disabled={currentStep === 1}
+              className={currentStep === 1 ? 'invisible' : ''}
+            >
+              Zurück
+            </Button>
+
+            <Button
+              onClick={handleNext}
+              disabled={isLoading}
+              className="min-w-32"
+            >
+              {isLoading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Laden...
+                </div>
+              ) : currentStep === steps.length ? (
+                'Jetzt bezahlen'
+              ) : (
+                'Weiter'
+              )}
+            </Button>
           </div>
         </div>
-      </section>
-
-      {/* Form Section */}
-      <section className="service-form-section section-padding">
-        <div className="container">
-          <div className="service-form-wrapper">
-            <div className="service-form-header">
-              <h2>Ihre Bewerbung perfektionieren</h2>
-              <p>Geben Sie Ihre Daten ein und erhalten Sie innerhalb von 24h eine KI-optimierte Bewerbung</p>
-            </div>
-
-            <form className="service-form">
-              <div className="form-grid">
-                <div className="form-group full-width">
-                  <label className="form-label">
-                    Stellenausschreibung
-                  </label>
-                  <textarea
-                    name="jobDescription"
-                    className="form-textarea"
-                    rows={4}
-                    placeholder="Fügen Sie hier die komplette Stellenausschreibung ein..."
-                    value={formData.jobDescription}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <span className="form-help">Kopieren Sie die vollständige Stellenausschreibung für beste Ergebnisse</span>
-                </div>
-
-                <div className="form-group full-width">
-                  <label className="form-label">
-                    Ihr aktuelles Anschreiben
-                  </label>
-                  <textarea
-                    name="currentLetter"
-                    className="form-textarea"
-                    rows={8}
-                    placeholder="Ihr aktuelles Anschreiben oder Stichpunkte zu Ihren Qualifikationen..."
-                    value={formData.currentLetter}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <span className="form-help">Auch Stichpunkte oder unvollständige Texte sind ausreichend</span>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Lebenslauf (PDF)
-                  </label>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    className="form-file"
-                    onChange={handleFileChange}
-                  />
-                  <span className="form-help">Optional: Aktueller Lebenslauf für bessere Personalisierung</span>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Branche/Bereich
-                  </label>
-                  <select 
-                    name="industry"
-                    className="form-select"
-                    value={formData.industry}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">Bitte wählen...</option>
-                    <option value="IT/Software Entwicklung">IT/Software Entwicklung</option>
-                    <option value="Marketing/Kommunikation">Marketing/Kommunikation</option>
-                    <option value="Vertrieb/Sales">Vertrieb/Sales</option>
-                    <option value="Finanzen/Controlling">Finanzen/Controlling</option>
-                    <option value="HR/Personalwesen">HR/Personalwesen</option>
-                    <option value="Consulting">Consulting</option>
-                    <option value="Gesundheitswesen">Gesundheitswesen</option>
-                    <option value="Ingenieurswesen">Ingenieurswesen</option>
-                    <option value="Andere">Andere</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Gewünschte Wirkung/Stil
-                  </label>
-                  <select 
-                    name="style"
-                    className="form-select"
-                    value={formData.style}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">Bitte wählen...</option>
-                    <option value="professionell">Professionell & Seriös</option>
-                    <option value="dynamisch">Dynamisch & Innovativ</option>
-                    <option value="sympathisch">Sympathisch & Nahbar</option>
-                    <option value="fuehrungsstark">Führungsstark & Durchsetzungsfähig</option>
-                  </select>
-                  <span className="form-help">Wie möchten Sie auf potenzielle Arbeitgeber wirken?</span>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    E-Mail für Zusendung
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="form-input"
-                    placeholder="ihre@email.de"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <span className="form-help">Wir senden Ihre optimierten Unterlagen an diese Adresse</span>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    Besondere Wünsche (optional)
-                  </label>
-                  <textarea
-                    name="specialRequests"
-                    className="form-textarea"
-                    rows={3}
-                    placeholder="Spezielle Anforderungen, Tonalität, Schwerpunkte..."
-                    value={formData.specialRequests}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-
-              <div className="service-summary">
-                <div className="summary-content">
-                  <h3>Was Sie erhalten:</h3>
-                  <ul className="summary-list">
-                    <li>✓ KI-optimiertes Anschreiben, perfekt auf die Stelle zugeschnitten</li>
-                    <li>✓ Überarbeiteter Lebenslauf mit professioneller Formatierung</li>
-                    <li>✓ ATS-optimiert für automatische Bewerbungssysteme</li>
-                    <li>✓ Persönliche Empfehlungen für Ihre Bewerbungsstrategie</li>
-                    <li>✓ Lieferung innerhalb von 24 Stunden</li>
-                  </ul>
-                  <div className="summary-price">
-                    <span className="price-label">Gesamtpreis:</span>
-                    <span className="price-value">29€</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-actions">
-                <button
-                  type="button"
-                  onClick={handlePayment}
-                  disabled={loading}
-                  className="btn-payment"
-                >
-                  {loading ? (
-                    <>
-                      <span className="payment-spinner"></span>
-                      Weiterleitung zu Stripe...
-                    </>
-                  ) : (
-                    <>
-                      Jetzt optimieren - 29€
-                      <span className="payment-secure">🔒 Sichere Zahlung über Stripe</span>
-                    </>
-                  )}
-                </button>
-                <p className="payment-note">
-                  Nach der Zahlung bearbeiten wir Ihre Bewerbung und senden sie innerhalb von 24h an Ihre E-Mail-Adresse.
-                </p>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
-  )
+  );
 } 
