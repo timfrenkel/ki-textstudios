@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Cookie Banner Styles */
+@import './cookie-banner.css';
+
 /* CSS Variables - Fashion Website Style */
 :root {
   /* Colors - Elegant Navy & Gold Theme */

@@ -1,101 +1,99 @@
-import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-import { generateOptimizedText } from '@/lib/openai'
-import { sendOptimizedText } from '@/lib/email'
+import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const { sessionId, service } = await request.json()
-
-    console.log('Processing order:', { sessionId, service })
-
-    // Stripe Session abrufen
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const { service, formData } = await request.json();
     
-    if (session.payment_status !== 'paid') {
-      return NextResponse.json(
-        { error: 'Zahlung noch nicht abgeschlossen' },
-        { status: 400 }
-      )
-    }
-
-    // Formular-Daten aus Metadata extrahieren
-    let formData
-    try {
-      formData = session.metadata?.formData ? JSON.parse(session.metadata.formData) : null
-    } catch (parseError) {
-      console.error('Error parsing form data:', parseError)
-      formData = null
-    }
-
-    if (!formData || !formData.email) {
-      console.error('No form data found in session metadata')
+    if (service === 'bewerbung-bundle') {
+      const { background, specialRequests, email, tone, applications } = formData;
       
-      // Fallback: Manuelle Benachrichtigung senden
-      try {
-        await sendOptimizedText('bewerbung', 'tim@loopnex.de', `
-FEHLER: Keine Formulardaten gefunden
+      const results = [];
+      
+      // Process each job application
+      for (let i = 0; i < applications.length; i++) {
+        const job = applications[i];
+        
+        if (!job.jobDetails.trim()) continue; // Skip empty applications
+        
+        const prompt = `Du bist ein deutscher Bewerbungsexperte mit Enterprise-KI. Erstelle ein professionelles Anschreiben für folgende Stelle:
 
-Session ID: ${sessionId}
-Service: ${service}
-Customer Email: ${session.customer_details?.email || 'Unbekannt'}
-Payment Status: ${session.payment_status}
+Firmenname: ${job.companyName}
+Position: ${job.position}
 
-Metadata: ${JSON.stringify(session.metadata, null, 2)}
+Stellenausschreibung:
+${job.jobDetails}
 
-Bitte manuell bearbeiten.
-        `, {})
-      } catch (emailError) {
-        console.error('Fallback email failed:', emailError)
+Kandidaten-Hintergrund:
+${background}
+
+Zusätzliche Wünsche: ${specialRequests || 'Keine speziellen Wünsche'}
+
+Tonfall: ${tone}
+
+Erstelle ein ATS-optimiertes Anschreiben mit:
+- Professioneller Struktur (Anrede, Einleitung, Hauptteil, Schluss)
+- Keywords aus der Stellenausschreibung
+- Konkrete Beispiele aus dem Hintergrund
+- Passendem Tonfall
+- Maximal 1 Seite
+- Sofort einsatzbereit
+
+Antworte nur mit dem Anschreiben, ohne weitere Erklärungen.`;
+
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4",
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 1000,
+          temperature: 0.7,
+        });
+
+        const coverLetter = completion.choices[0]?.message?.content || 'Fehler bei der Generierung';
+        
+        results.push({
+          company: job.companyName,
+          position: job.position,
+          coverLetter: coverLetter
+        });
       }
 
-      return NextResponse.json(
-        { error: 'Formular-Daten nicht gefunden. Manuelle Bearbeitung wurde eingeleitet.' },
-        { status: 400 }
-      )
+      // Send email with all cover letters
+      const emailContent = `
+        <h2>Deine 3 Bewerbungsschreiben</h2>
+        <p>Hier sind deine maßgeschneiderten Anschreiben:</p>
+        
+        ${results.map((result, index) => `
+          <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+            <h3>Bewerbung ${index + 1}: ${result.company} - ${result.position}</h3>
+            <div style="white-space: pre-wrap; font-family: Arial, sans-serif; line-height: 1.6;">
+              ${result.coverLetter}
+            </div>
+          </div>
+        `).join('')}
+        
+        <p><strong>Tipp:</strong> Passe die Anschreiben leicht an deine persönlichen Umstände an.</p>
+      `;
+
+      // TODO: Implement email sending
+      console.log('Bundle results:', results);
+      
+      return NextResponse.json({ 
+        success: true, 
+        message: '3 Bewerbungsschreiben erstellt',
+        results: results
+      });
     }
-
-    console.log('Form data found:', { email: formData.email, service })
-
-    // Text mit OpenAI generieren
-    console.log('Generating optimized text...')
-    const optimizedText = await generateOptimizedText(service, formData)
-
-    // E-Mail versenden
-    console.log('Sending email to:', formData.email)
-    await sendOptimizedText(service, formData.email, optimizedText, formData)
-
-    console.log('Order processing completed successfully')
-
-    return NextResponse.json({
-      success: true,
-      message: 'Bestellung erfolgreich verarbeitet und E-Mail versendet!'
-    })
-
-  } catch (error) {
-    console.error('Order processing error:', error)
     
-    // Fallback: Fehler-Benachrichtigung senden
-    try {
-      await sendOptimizedText('bewerbung', 'tim@loopnex.de', `
-FEHLER BEI ORDER PROCESSING
-
-Error: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}
-Stack: ${error instanceof Error ? error.stack : 'N/A'}
-
-Request Body: ${JSON.stringify(await request.json(), null, 2)}
-
-Bitte manuell bearbeiten.
-      `, {})
-    } catch (fallbackError) {
-      console.error('Fallback email failed:', fallbackError)
-    }
-
+    return NextResponse.json({ error: 'Unsupported service' }, { status: 400 });
+  } catch (error) {
+    console.error('Process order error:', error);
     return NextResponse.json(
-      { error: 'Verarbeitung fehlgeschlagen. Manuelle Bearbeitung wurde eingeleitet.' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 } 

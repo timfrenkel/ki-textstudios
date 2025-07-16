@@ -8,7 +8,7 @@ export default function Home() {
     {
       id: 'bewerbung',
       title: 'Bewerbung',
-      subtitle: 'GPT-4 Prompt-Engineering',
+      subtitle: 'Enterprise AI Prompt-Engineering',
       description: 'Advanced AI-optimierte Anschreiben mit modernsten Language Models für maximale ATS-Kompatibilität',
       price: '29€',
       originalPrice: '58€',
@@ -18,14 +18,16 @@ export default function Home() {
       available: true
     },
     {
-      id: 'dating',
-      title: 'Dating-Profil', 
-      subtitle: 'Bald verfügbar',
-      description: 'Psychologisch-fundierte AI-Texte mit Deep Learning Algorithmen für maximale Match-Rate',
-      price: '19€',
-      image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=400&fit=crop',
-      color: 'pink',
-      available: false
+      id: 'bewerbung-bundle',
+      title: 'Bewerbungs-Bündel',
+      subtitle: '3 Bewerbungen für 2',
+      description: 'Perfekt für aktive Jobsuche - 3 maßgeschneiderte Bewerbungen zu einem vergünstigten Preis',
+      price: '49€',
+      originalPrice: '87€',
+      discount: 44,
+      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop',
+      color: 'purple',
+      available: true
     },
     {
       id: 'bio',
@@ -36,13 +38,23 @@ export default function Home() {
       image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop',
       color: 'green',
       available: false
+    },
+    {
+      id: 'dating',
+      title: 'Dating-Profil', 
+      subtitle: 'Bald verfügbar',
+      description: 'Psychologisch-fundierte AI-Texte mit Deep Learning Algorithmen für maximale Match-Rate',
+      price: '19€',
+      image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=400&fit=crop',
+      color: 'pink',
+      available: false
     }
   ]
 
   const features = [
     {
       title: 'Enterprise-Grade AI Models',
-      description: 'Cutting-edge GPT-4 & Claude Integration mit kontinuierlichen Model-Updates für state-of-the-art Performance',
+      description: 'Cutting-edge Enterprise AI & Claude Integration mit kontinuierlichen Model-Updates für state-of-the-art Performance',
       icon: '🚀'
     },
     {
@@ -115,7 +127,7 @@ export default function Home() {
                   Ein Job ist der Großteil deines Lebens. Warum Risiko eingehen beim Traumjob?
                 </h2>
                 <p className="hero-description hero-stagger hero-stagger-3">
-                  Mit unserer Experten-KI gehst du auf Nummer sicher. Deine Konkurrenz nutzt ChatGPT - du bekommst 1000+ Stunden Prompt-Engineering.
+                  Mit unserer Experten-KI gehst du auf Nummer sicher. Deine Konkurrenz nutzt kostenlose KI-Tools - du bekommst 1000+ Stunden Prompt-Engineering.
                 </p>
                 <div className="hero-buttons hero-stagger hero-stagger-4">
                   <Link href="#services" className="btn-hero-primary">
@@ -152,8 +164,8 @@ export default function Home() {
               
               <div className="ats-problem-card">
                 <div className="problem-icon">💡</div>
-                <h3>Deine Konkurrenz nutzt ChatGPT</h3>
-                <p>Die meisten Bewerber verwenden generische ChatGPT-Texte. Du bekommst Experten-KI mit 1000+ Stunden ATS-Expertise.</p>
+                <h3>Deine Konkurrenz nutzt kostenlose KI</h3>
+                <p>Die meisten Bewerber verwenden generische kostenlose KI-Texte. Du bekommst Enterprise-KI mit 1000+ Stunden ATS-Expertise.</p>
               </div>
             </div>
             
@@ -282,7 +294,7 @@ export default function Home() {
             <div className="step-item feature-stagger scroll-animate-delay-2">
               <div className="step-number">2</div>
               <h3>AI-Generation & Bezahlung</h3>
-              <p>Modernste Language Models (GPT-4, Claude) erstellen Ihre optimierten Texte. Sichere Zahlung über Stripe</p>
+                              <p>Modernste Enterprise AI Models (Claude, GPT-4 Enterprise) erstellen Ihre optimierten Texte. Sichere Zahlung über Stripe</p>
             </div>
             <div className="step-item feature-stagger scroll-animate-delay-3">
               <div className="step-number">3</div>

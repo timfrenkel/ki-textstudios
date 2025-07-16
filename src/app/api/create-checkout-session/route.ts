@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     // Stripe Price IDs
     const priceIds: Record<string, string> = {
       bewerbung: 'price_1Rl6CB1PblTbwG3OfkfSINf0',
+      'bewerbung-bundle': 'price_1Rl6CB1PblTbwG3OfkfSINf0', // TODO: Create new price ID for bundle
       dating: 'price_1Rl6Ca1PblTbwG3OHE8DTBK4',
       bio: 'price_1Rl6DF1PblTbwG3OrwEJwYQZ'
     }

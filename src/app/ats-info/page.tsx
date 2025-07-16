@@ -90,7 +90,7 @@ export default function ATSInfo() {
                   <h3>📊 Das bedeutet:</h3>
                   <ul className="ats-facts">
                     <li><strong>90% der Unternehmen</strong> nutzen ATS-Systeme</li>
-                    <li><strong>Deine Konkurrenz</strong> nutzt ChatGPT → wird aussortiert</li>
+                    <li><strong>Deine Konkurrenz</strong> nutzt kostenlose KI → wird aussortiert</li>
                     <li><strong>Du brauchst Experten-KI</strong> → kommst durch</li>
                   </ul>
                 </div>

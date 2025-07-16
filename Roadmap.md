@@ -20,7 +20,7 @@
 
 ✅ Klare UX mit moderner, professioneller Website  
 
-✅ Optional später: Automatisierung mit GPT-API + PDF-Ausgabe
+✅ Optional später: Automatisierung mit Enterprise AI API + PDF-Ausgabe
 
 
 
@@ -56,7 +56,7 @@
 
 \- \[ ] Nach Zahlung → Redirect zum Formular
 
-\- \[ ] API-Route zur GPT-Verarbeitung (manuell oder via OpenAI)
+\- \[ ] API-Route zur Enterprise AI-Verarbeitung (manuell oder via OpenAI)
 
 \- \[ ] Erfolgsmeldung/Dankeseite nach Absenden
 

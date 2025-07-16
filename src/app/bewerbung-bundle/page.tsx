@@ -2,32 +2,44 @@
 
 import React, { useState } from 'react';
 
-interface FormData {
+interface JobApplication {
   jobDetails: string;
+  companyName: string;
+  position: string;
+}
+
+interface FormData {
   background: string;
   specialRequests: string;
   resumeFile?: File;
   linkedinUrl: string;
   email: string;
   tone: string;
+  applications: JobApplication[];
 }
 
-export default function BewerbungPage() {
+export default function BewerbungBundlePage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    jobDetails: '',
     background: '',
     specialRequests: '',
     linkedinUrl: '',
     email: '',
-    tone: ''
+    tone: '',
+    applications: [
+      { jobDetails: '', companyName: '', position: '' },
+      { jobDetails: '', companyName: '', position: '' },
+      { jobDetails: '', companyName: '', position: '' }
+    ]
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const steps = [
-    'Jobdetails',
-    'Dein Hintergrund', 
+    'Dein Hintergrund',
+    'Job 1',
+    'Job 2', 
+    'Job 3',
     'Zusätzliche Infos',
     'Bezahlung'
   ];
@@ -36,18 +48,27 @@ export default function BewerbungPage() {
     const newErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!formData.jobDetails.trim()) {
-        newErrors.jobDetails = 'Bitte füge die Stellenausschreibung ein';
-      }
-    }
-
-    if (step === 2) {
       if (!formData.background.trim()) {
         newErrors.background = 'Bitte erzähl uns von dir';
       }
     }
 
-    if (step === 3) {
+    if (step >= 2 && step <= 4) {
+      const jobIndex = step - 2;
+      const job = formData.applications[jobIndex];
+      
+      if (!job.jobDetails.trim()) {
+        newErrors[`jobDetails_${jobIndex}`] = 'Bitte füge die Stellenausschreibung ein';
+      }
+      if (!job.companyName.trim()) {
+        newErrors[`companyName_${jobIndex}`] = 'Bitte gib den Firmennamen ein';
+      }
+      if (!job.position.trim()) {
+        newErrors[`position_${jobIndex}`] = 'Bitte gib die Position ein';
+      }
+    }
+
+    if (step === 5) {
       if (!formData.email.trim()) {
         newErrors.email = 'E-Mail-Adresse ist erforderlich';
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -88,20 +109,29 @@ export default function BewerbungPage() {
     }
   };
 
+  const updateApplication = (index: number, field: keyof JobApplication, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      applications: prev.applications.map((app, i) => 
+        i === index ? { ...app, [field]: value } : app
+      )
+    }));
+  };
+
   const handleSubmit = async () => {
-    if (!validateStep(3)) return;
+    if (!validateStep(6)) return;
 
     setIsLoading(true);
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('service', 'bewerbung');
-      formDataToSend.append('jobDetails', formData.jobDetails);
+      formDataToSend.append('service', 'bewerbung-bundle');
       formDataToSend.append('background', formData.background);
       formDataToSend.append('specialRequests', formData.specialRequests);
       formDataToSend.append('linkedinUrl', formData.linkedinUrl);
       formDataToSend.append('email', formData.email);
       formDataToSend.append('tone', formData.tone);
+      formDataToSend.append('applications', JSON.stringify(formData.applications));
       
       if (formData.resumeFile) {
         formDataToSend.append('resumeFile', formData.resumeFile);
@@ -133,31 +163,6 @@ export default function BewerbungPage() {
           <div className="form-grid">
             <div className="form-group full-width">
               <label className="form-label">
-                📝 Stellenausschreibung *
-              </label>
-              <textarea
-                value={formData.jobDetails}
-                onChange={(e) => setFormData(prev => ({ ...prev, jobDetails: e.target.value }))}
-                className={`form-textarea ${errors.jobDetails ? 'error' : ''}`}
-                rows={12}
-                placeholder="Kopiere hier die komplette Stellenausschreibung... Unsere Enterprise-KI extrahiert automatisch alle wichtigen Informationen: Aufgaben, Anforderungen, Keywords und Tonalität."
-                style={{ minHeight: '300px' }}
-              />
-              {errors.jobDetails && (
-                <span className="form-help" style={{ color: 'red' }}>{errors.jobDetails}</span>
-              )}
-              <span className="form-help">
-                ✅ Füge die komplette Stellenausschreibung ein - Unsere Enterprise-KI analysiert automatisch alle relevanten Details
-              </span>
-            </div>
-          </div>
-        );
-
-      case 2:
-        return (
-          <div className="form-grid">
-            <div className="form-group full-width">
-              <label className="form-label">
                 👤 Deine Erfahrung und Hintergrund *
               </label>
               <textarea
@@ -178,7 +183,70 @@ export default function BewerbungPage() {
           </div>
         );
 
+      case 2:
       case 3:
+      case 4:
+        const jobIndex = currentStep - 2;
+        const job = formData.applications[jobIndex];
+        const jobNumber = jobIndex + 1;
+        
+        return (
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">
+                🏢 Firmenname (Job {jobNumber}) *
+              </label>
+              <input
+                type="text"
+                value={job.companyName}
+                onChange={(e) => updateApplication(jobIndex, 'companyName', e.target.value)}
+                className={`form-input ${errors[`companyName_${jobIndex}`] ? 'error' : ''}`}
+                placeholder="z.B. Google, Microsoft, Startup XY"
+              />
+              {errors[`companyName_${jobIndex}`] && (
+                <span className="form-help" style={{ color: 'red' }}>{errors[`companyName_${jobIndex}`]}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                💼 Position (Job {jobNumber}) *
+              </label>
+              <input
+                type="text"
+                value={job.position}
+                onChange={(e) => updateApplication(jobIndex, 'position', e.target.value)}
+                className={`form-input ${errors[`position_${jobIndex}`] ? 'error' : ''}`}
+                placeholder="z.B. Senior UX Designer, Product Manager"
+              />
+              {errors[`position_${jobIndex}`] && (
+                <span className="form-help" style={{ color: 'red' }}>{errors[`position_${jobIndex}`]}</span>
+              )}
+            </div>
+
+            <div className="form-group full-width">
+              <label className="form-label">
+                📝 Stellenausschreibung (Job {jobNumber}) *
+              </label>
+              <textarea
+                value={job.jobDetails}
+                onChange={(e) => updateApplication(jobIndex, 'jobDetails', e.target.value)}
+                className={`form-textarea ${errors[`jobDetails_${jobIndex}`] ? 'error' : ''}`}
+                rows={12}
+                placeholder="Kopiere hier die komplette Stellenausschreibung... Unsere Enterprise-KI extrahiert automatisch alle wichtigen Informationen: Aufgaben, Anforderungen, Keywords und Tonalität."
+                style={{ minHeight: '300px' }}
+              />
+              {errors[`jobDetails_${jobIndex}`] && (
+                <span className="form-help" style={{ color: 'red' }}>{errors[`jobDetails_${jobIndex}`]}</span>
+              )}
+              <span className="form-help">
+                ✅ Füge die komplette Stellenausschreibung ein - Unsere Enterprise-KI analysiert automatisch alle relevanten Details
+              </span>
+            </div>
+          </div>
+        );
+
+      case 5:
         return (
           <div className="form-grid">
             <div className="form-group full-width">
@@ -243,13 +311,13 @@ export default function BewerbungPage() {
                 <span className="form-help" style={{ color: 'red' }}>{errors.email}</span>
               )}
               <span className="form-help">
-                Wir senden dein optimiertes Anschreiben an diese Adresse
+                Wir senden deine 3 optimierten Anschreiben an diese Adresse
               </span>
             </div>
 
             <div className="form-group">
               <label className="form-label">
-                🎙️ Wie soll dein Anschreiben klingen? *
+                🎙️ Wie sollen deine Anschreiben klingen? *
               </label>
               <select
                 value={formData.tone}
@@ -272,35 +340,38 @@ export default function BewerbungPage() {
           </div>
         );
 
-              case 4:
-          return (
-            <div className="service-summary">
-              <div className="summary-content">
-                <h3>Warum nicht einfach kostenlose KI?</h3>
+      case 6:
+        return (
+          <div className="service-summary">
+            <div className="summary-content">
+                              <h3>Warum nicht einfach kostenlose KI?</h3>
                 <div className="comparison-box">
                   <div><strong>Kostenlose KI allein:</strong> Vage Prompts → Generische Texte → Stundenlange Anpassungen → Trotzdem unprofessionell</div>
                   <div><strong className="highlight">Unser Service:</strong> Expertenanalyse → Maßgeschneidert → ATS-optimiert → Sofort einsatzbereit</div>
                 </div>
-                
-                <h3>Was du erhältst:</h3>
-                <ul className="summary-list">
-                  <li>✓ <strong>Deutsche Bewerbungsexperten-KI</strong> statt generische kostenlose KI</li>
-                  <li>✓ <strong>Automatische Stellenanalyse</strong> - extrahiert alle relevanten Keywords</li>
-                  <li>✓ <strong>ATS-System Optimierung</strong> - wird von Bewerbungsrobotern erkannt</li>
-                  <li>✓ <strong>Professionelle Struktur</strong> nach deutschen Standards</li>
-                  <li>✓ <strong>Branchenspezifischer Tonfall</strong> - von sympathisch bis führungsstark</li>
-                  <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
-                </ul>
-                <div className="summary-price">
-                  <span className="price-label">Investition in deine Zukunft:</span>
-                  <span className="price-value">29€</span>
-                </div>
-                <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
-                  Spart dir 3-5 Stunden Arbeit und erhöht deine Chancen deutlich
-                </div>
+              
+              <h3>Was du erhältst:</h3>
+              <ul className="summary-list">
+                <li>✓ <strong>3 maßgeschneiderte Bewerbungen</strong> für verschiedene Unternehmen</li>
+                                  <li>✓ <strong>Deutsche Bewerbungsexperten-KI</strong> statt generische kostenlose KI</li>
+                <li>✓ <strong>Automatische Stellenanalyse</strong> - extrahiert alle relevanten Keywords</li>
+                <li>✓ <strong>ATS-System Optimierung</strong> - wird von Bewerbungsrobotern erkannt</li>
+                <li>✓ <strong>Professionelle Struktur</strong> nach deutschen Standards</li>
+                <li>✓ <strong>Branchenspezifischer Tonfall</strong> - von sympathisch bis führungsstark</li>
+                <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
+                <li>✓ <strong>44% Rabatt</strong> gegenüber Einzelkauf</li>
+              </ul>
+              <div className="summary-price">
+                <span className="price-label">Investition in deine Zukunft:</span>
+                <span className="price-value">49€</span>
+                <span className="price-original">statt 87€</span>
+              </div>
+              <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                Spart dir 9-15 Stunden Arbeit und erhöht deine Chancen deutlich
               </div>
             </div>
-          );
+          </div>
+        );
 
       default:
         return null;
@@ -313,26 +384,26 @@ export default function BewerbungPage() {
       <section className="service-hero">
         <div className="service-hero-bg">
           <img 
-            src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1920&h=600&fit=crop" 
-            alt="Bewerbung optimieren" 
+            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1920&h=600&fit=crop" 
+            alt="Bewerbungs-Bündel" 
             className="hero-bg"
           />
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <h1 className="service-hero-title">Bewerbung optimieren</h1>
+                <h1 className="service-hero-title">Bewerbungs-Bündel</h1>
                 <p className="service-hero-subtitle">
-                  Professionelle KI-Anschreiben in 5 Minuten - ohne stundenlanges Prompt-Engineering
+                  3 maßgeschneiderte Bewerbungen für aktive Jobsuche - 44% Rabatt
                 </p>
                 <div className="usp-box">
                   <div className="usp-title">
-                    🚀 Besser als kostenlose KI allein:
+                    🚀 Perfekt für aktive Jobsuche:
                   </div>
                   <div className="usp-grid">
-                    <div>✅ Speziell für deutsche Bewerbungen</div>
-                    <div>✅ Automatische Keyword-Optimierung</div>
-                    <div>✅ ATS-System kompatibel</div>
-                    <div>✅ Perfekte Struktur & Formatierung</div>
+                    <div>✅ 3 verschiedene Unternehmen</div>
+                    <div>✅ 44% Rabatt gegenüber Einzelkauf</div>
+                    <div>✅ ATS-optimiert für alle Bewerbungen</div>
+                    <div>✅ Sofort einsatzbereit</div>
                   </div>
                 </div>
               </div>
@@ -346,8 +417,8 @@ export default function BewerbungPage() {
         <div className="container">
           <div className="service-form-wrapper">
             <div className="service-form-header">
-              <h2>Dein optimiertes Anschreiben</h2>
-              <p>Folge den Schritten und erhalte in wenigen Minuten dein KI-optimiertes Bewerbungsschreiben</p>
+              <h2>Deine 3 optimierten Anschreiben</h2>
+              <p>Folge den Schritten und erhalte in wenigen Minuten 3 maßgeschneiderte Bewerbungsschreiben</p>
             </div>
 
             <div className="service-form">
@@ -396,7 +467,7 @@ export default function BewerbungPage() {
                         </>
                       ) : (
                         <>
-                          Jetzt optimieren - 29€
+                          Jetzt 3 Bewerbungen erstellen - 49€
                           <span className="payment-secure">🔒 Sichere Zahlung über Stripe</span>
                         </>
                       )}
