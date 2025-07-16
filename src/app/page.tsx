@@ -9,7 +9,7 @@ export default function Home() {
       id: 'bewerbung',
       title: 'Bewerbung',
       subtitle: 'Enterprise AI Prompt-Engineering',
-      description: 'Advanced AI-optimierte Anschreiben mit modernsten Language Models für maximale ATS-Kompatibilität',
+      description: 'Bewerbungen, die nicht im Papierkorb landen',
       price: '29€',
       originalPrice: '58€',
       discount: 50,
@@ -20,8 +20,8 @@ export default function Home() {
     {
       id: 'bewerbung-bundle',
       title: 'Bewerbungs-Bündel',
-      subtitle: '3 Bewerbungen für 2',
-      description: 'Perfekt für aktive Jobsuche - 3 maßgeschneiderte Bewerbungen zu einem vergünstigten Preis',
+      subtitle: 'Sparen & Bewerben - 3 Bewerbungen im Bundle',
+      description: 'ATS-Revolution für aktive Jobsuche - 3 Bewerbungen mit Enterprise AI',
       price: '49€',
       originalPrice: '87€',
       discount: 44,
@@ -163,9 +163,9 @@ export default function Home() {
               </div>
               
               <div className="ats-problem-card">
-                <div className="problem-icon">💡</div>
-                <h3>Deine Konkurrenz nutzt kostenlose KI</h3>
-                <p>Die meisten Bewerber verwenden generische kostenlose KI-Texte. Du bekommst Enterprise-KI mit 1000+ Stunden ATS-Expertise.</p>
+                <div className="problem-icon">🚀</div>
+                <h3>Du bist der ATS-Revolutionär</h3>
+                <p>Als erster deutscher Anbieter: Unsere Enterprise AI hat 1000+ Stunden deutsche Bewerbungsexpertise.</p>
               </div>
             </div>
             

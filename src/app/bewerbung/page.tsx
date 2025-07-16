@@ -276,19 +276,18 @@ export default function BewerbungPage() {
           return (
             <div className="service-summary">
               <div className="summary-content">
-                <h3>Warum nicht einfach kostenlose KI?</h3>
+                <h3>Warum ATS-Revolution?</h3>
                 <div className="comparison-box">
-                  <div><strong>Kostenlose KI allein:</strong> Vage Prompts → Generische Texte → Stundenlange Anpassungen → Trotzdem unprofessionell</div>
-                  <div><strong className="highlight">Unser Service:</strong> Expertenanalyse → Maßgeschneidert → ATS-optimiert → Sofort einsatzbereit</div>
+                  <div><strong>Andere Anbieter:</strong> ChatGPT → Generische Texte → Landen im Papierkorb → Keine Antworten</div>
+                  <div><strong className="highlight">ATS-Revolution:</strong> Enterprise AI → ATS-optimiert → Kommen durch Systeme → Mehr Interviews</div>
                 </div>
                 
                 <h3>Was du erhältst:</h3>
                 <ul className="summary-list">
-                  <li>✓ <strong>Deutsche Bewerbungsexperten-KI</strong> statt generische kostenlose KI</li>
-                  <li>✓ <strong>Automatische Stellenanalyse</strong> - extrahiert alle relevanten Keywords</li>
-                  <li>✓ <strong>ATS-System Optimierung</strong> - wird von Bewerbungsrobotern erkannt</li>
-                  <li>✓ <strong>Professionelle Struktur</strong> nach deutschen Standards</li>
-                  <li>✓ <strong>Branchenspezifischer Tonfall</strong> - von sympathisch bis führungsstark</li>
+                  <li>✓ <strong>Erste deutsche ATS-Revolution</strong> - als Vorreiter im Markt</li>
+                  <li>✓ <strong>Landen nicht im Papierkorb</strong> - werden von ATS-Systemen erkannt</li>
+                  <li>✓ <strong>Enterprise AI</strong> - nicht ChatGPT, sondern spezialisierte KI</li>
+                  <li>✓ <strong>Deutsche Standards</strong> - perfekte Struktur & Formatierung</li>
                   <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
                 </ul>
                 <div className="summary-price">
@@ -320,19 +319,19 @@ export default function BewerbungPage() {
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <h1 className="service-hero-title">Bewerbung optimieren</h1>
+                <h1 className="service-hero-title">ATS-Revolution: Bewerbung optimieren</h1>
                 <p className="service-hero-subtitle">
-                  Professionelle KI-Anschreiben in 5 Minuten - ohne stundenlanges Prompt-Engineering
+                  Bewerbungen, die nicht im Papierkorb landen
                 </p>
                 <div className="usp-box">
                   <div className="usp-title">
-                    🚀 Besser als kostenlose KI allein:
+                    🚀 ATS-Revolution: Als erster deutscher Anbieter
                   </div>
                   <div className="usp-grid">
-                    <div>✅ Speziell für deutsche Bewerbungen</div>
-                    <div>✅ Automatische Keyword-Optimierung</div>
-                    <div>✅ ATS-System kompatibel</div>
-                    <div>✅ Perfekte Struktur & Formatierung</div>
+                    <div>✅ Landen nicht im Papierkorb</div>
+                    <div>✅ Erste deutsche KI-Bewerbungsoptimierung</div>
+                    <div>✅ Sofort einsatzbereit</div>
+                    <div>✅ Enterprise AI statt ChatGPT</div>
                   </div>
                 </div>
               </div>

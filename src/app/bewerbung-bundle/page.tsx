@@ -344,22 +344,21 @@ export default function BewerbungBundlePage() {
         return (
           <div className="service-summary">
             <div className="summary-content">
-                              <h3>Warum nicht einfach kostenlose KI?</h3>
+                              <h3>Warum ATS-Revolution Bündel?</h3>
                 <div className="comparison-box">
-                  <div><strong>Kostenlose KI allein:</strong> Vage Prompts → Generische Texte → Stundenlange Anpassungen → Trotzdem unprofessionell</div>
-                  <div><strong className="highlight">Unser Service:</strong> Expertenanalyse → Maßgeschneidert → ATS-optimiert → Sofort einsatzbereit</div>
+                  <div><strong>Andere Anbieter:</strong> ChatGPT → Generische Texte → Landen im Papierkorb → Keine Antworten</div>
+                  <div><strong className="highlight">ATS-Revolution:</strong> Enterprise AI → ATS-optimiert → Kommen durch Systeme → Mehr Interviews</div>
                 </div>
               
               <h3>Was du erhältst:</h3>
               <ul className="summary-list">
-                <li>✓ <strong>3 maßgeschneiderte Bewerbungen</strong> für verschiedene Unternehmen</li>
-                                  <li>✓ <strong>Deutsche Bewerbungsexperten-KI</strong> statt generische kostenlose KI</li>
-                <li>✓ <strong>Automatische Stellenanalyse</strong> - extrahiert alle relevanten Keywords</li>
-                <li>✓ <strong>ATS-System Optimierung</strong> - wird von Bewerbungsrobotern erkannt</li>
-                <li>✓ <strong>Professionelle Struktur</strong> nach deutschen Standards</li>
-                <li>✓ <strong>Branchenspezifischer Tonfall</strong> - von sympathisch bis führungsstark</li>
-                <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
-                <li>✓ <strong>44% Rabatt</strong> gegenüber Einzelkauf</li>
+                                  <li>✓ <strong>3 ATS-optimierte Bewerbungen</strong> - mit Enterprise AI</li>
+                  <li>✓ <strong>Erste deutsche ATS-Revolution</strong> - als Vorreiter im Markt</li>
+                  <li>✓ <strong>Enterprise AI</strong> - nicht ChatGPT, sondern spezialisierte KI</li>
+                  <li>✓ <strong>Automatische Keyword-Extraktion</strong> - aus Stellenausschreibungen</li>
+                  <li>✓ <strong>Deutsche Standards</strong> - perfekte Struktur & Formatierung</li>
+                  <li>✓ <strong>Sofort einsatzbereit</strong> - keine Nachbearbeitung nötig</li>
+                  <li>✓ <strong>44% Rabatt</strong> gegenüber Einzelkauf</li>
               </ul>
               <div className="summary-price">
                 <span className="price-label">Investition in deine Zukunft:</span>
@@ -391,19 +390,19 @@ export default function BewerbungBundlePage() {
           <div className="hero-overlay">
             <div className="container">
               <div className="service-hero-content">
-                <h1 className="service-hero-title">Bewerbungs-Bündel</h1>
+                <h1 className="service-hero-title">ATS-Revolution Bündel</h1>
                 <p className="service-hero-subtitle">
-                  3 maßgeschneiderte Bewerbungen für aktive Jobsuche - 44% Rabatt
+                  Als erster deutscher Anbieter: 3 Bewerbungen mit Enterprise AI
                 </p>
                 <div className="usp-box">
                   <div className="usp-title">
-                    🚀 Perfekt für aktive Jobsuche:
+                    🚀 ATS-Revolution für aktive Jobsuche:
                   </div>
                   <div className="usp-grid">
-                    <div>✅ 3 verschiedene Unternehmen</div>
+                    <div>✅ 3 ATS-optimierte Bewerbungen</div>
+                    <div>✅ Enterprise AI statt ChatGPT</div>
+                    <div>✅ Erste deutsche KI-Bewerbungsoptimierung</div>
                     <div>✅ 44% Rabatt gegenüber Einzelkauf</div>
-                    <div>✅ ATS-optimiert für alle Bewerbungen</div>
-                    <div>✅ Sofort einsatzbereit</div>
                   </div>
                 </div>
               </div>
