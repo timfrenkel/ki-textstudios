@@ -36,8 +36,7 @@ export default function RootLayout({
                 <h4>Services</h4>
                 <ul>
                   <li><a href="/bewerbung">Bewerbung optimieren</a></li>
-                  <li><a href="/dating">Dating-Profil</a></li>
-                  <li><a href="/bio">Social Media Bio</a></li>
+                  <li><a href="/bewerbung-bundle">Bewerbungs-Bündel</a></li>
                 </ul>
               </div>
               <div className="footer-section">
