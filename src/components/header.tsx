@@ -54,12 +54,6 @@ export default function Header() {
             <Link href="/bewerbung" className="nav-link">
               Bewerbung
             </Link>
-            <span className="nav-link nav-link-disabled">
-              Dating
-            </span>
-            <span className="nav-link nav-link-disabled">
-              Bio
-            </span>
           </nav>
         </div>
       </div>

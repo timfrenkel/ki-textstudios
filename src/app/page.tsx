@@ -190,68 +190,40 @@ export default function Home() {
           </div>
           
           <div className="services-grid grid grid-3">
-            {services.map((service, index) => (
-              service.available ? (
-                <Link 
-                  key={service.id}
-                  href={`/${service.id}`}
-                  className={`service-card card card-animate scroll-animate-delay-${index + 1} service-card-clickable`}
-                >
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    className="service-image"
-                  />
-                  <div className="service-info">
-                    <p className="service-category">KI-Service</p>
-                    <h3 className="service-title">{service.title}</h3>
-                    <p className="service-subtitle">{service.subtitle}</p>
-                    <p className="service-description">{service.description}</p>
-                    <div className="service-footer">
-                      <div className="service-price-container">
-                        {service.discount ? (
-                          <>
-                            <span className="service-price-discounted">{service.price}</span>
-                            <span className="service-price-original">{service.originalPrice}</span>
-                            <span className="service-discount-badge">-{service.discount}%</span>
-                          </>
-                        ) : (
-                          <span className="service-price">ab {service.price}</span>
-                        )}
-                      </div>
-                      <span className="service-cta">
-                        Jetzt starten →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ) : (
-                <div 
-                  key={service.id}
-                  className={`service-card card card-animate scroll-animate-delay-${index + 1} service-unavailable`}
-                >
-                  <div className="service-unavailable-overlay">
-                    <div className="unavailable-badge">Bald verfügbar</div>
-                  </div>
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    className="service-image grayscale"
-                  />
-                  <div className="service-info">
-                    <p className="service-category">KI-Service</p>
-                    <h3 className="service-title">{service.title}</h3>
-                    <p className="service-subtitle">{service.subtitle}</p>
-                    <p className="service-description">{service.description}</p>
-                    <div className="service-footer">
-                      <div className="service-price-container">
+            {services.filter(service => service.available).map((service, index) => (
+              <Link 
+                key={service.id}
+                href={`/${service.id}`}
+                className={`service-card card card-animate scroll-animate-delay-${index + 1} service-card-clickable`}
+              >
+                <img 
+                  src={service.image} 
+                  alt={service.title} 
+                  className="service-image"
+                />
+                <div className="service-info">
+                  <p className="service-category">KI-Service</p>
+                  <h3 className="service-title">{service.title}</h3>
+                  <p className="service-subtitle">{service.subtitle}</p>
+                  <p className="service-description">{service.description}</p>
+                  <div className="service-footer">
+                    <div className="service-price-container">
+                      {service.discount ? (
+                        <>
+                          <span className="service-price-discounted">{service.price}</span>
+                          <span className="service-price-original">{service.originalPrice}</span>
+                          <span className="service-discount-badge">-{service.discount}%</span>
+                        </>
+                      ) : (
                         <span className="service-price">ab {service.price}</span>
-                      </div>
-                      <span className="service-cta-disabled">Bald verfügbar</span>
+                      )}
                     </div>
+                    <span className="service-cta">
+                      Jetzt starten →
+                    </span>
                   </div>
                 </div>
-              )
+              </Link>
             ))}
           </div>
         </div>
